@@ -1,0 +1,2868 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="A comprehensive algorithm help guide featuring sorting, graph, greedy, and dynamic programming algorithms in C with detailed explanations.">
+    <title>Algorithm Help Guide — DSA Reference</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        /* ============================================================
+           CSS CUSTOM PROPERTIES — Design Tokens
+           ============================================================ */
+        :root {
+            /* Background & Surface */
+            --bg-primary: #0a0e1a;
+            --bg-secondary: #111827;
+            --bg-card: rgba(17, 24, 39, 0.7);
+            --bg-code: #0d1117;
+            --bg-glass: rgba(255, 255, 255, 0.03);
+
+            /* Accent Colors */
+            --accent-blue: #60a5fa;
+            --accent-purple: #a78bfa;
+            --accent-cyan: #22d3ee;
+            --accent-green: #34d399;
+            --accent-orange: #fb923c;
+            --accent-pink: #f472b6;
+            --accent-red: #f87171;
+            --accent-yellow: #fbbf24;
+
+            /* Gradients */
+            --gradient-hero: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --gradient-blue: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            --gradient-green: linear-gradient(135deg, #10b981, #06b6d4);
+            --gradient-orange: linear-gradient(135deg, #f97316, #ef4444);
+            --gradient-pink: linear-gradient(135deg, #ec4899, #8b5cf6);
+
+            /* Text */
+            --text-primary: #f1f5f9;
+            --text-secondary: #94a3b8;
+            --text-muted: #64748b;
+            --text-accent: #60a5fa;
+
+            /* Borders */
+            --border-subtle: rgba(148, 163, 184, 0.1);
+            --border-accent: rgba(96, 165, 250, 0.3);
+
+            /* Shadows */
+            --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3);
+            --shadow-md: 0 4px 20px rgba(0, 0, 0, 0.4);
+            --shadow-lg: 0 10px 40px rgba(0, 0, 0, 0.5);
+            --shadow-glow: 0 0 30px rgba(96, 165, 250, 0.15);
+
+            /* Syntax Highlighting */
+            --syn-keyword: #ff79c6;
+            --syn-type: #8be9fd;
+            --syn-string: #f1fa8c;
+            --syn-number: #bd93f9;
+            --syn-comment: #6272a4;
+            --syn-function: #50fa7b;
+            --syn-operator: #ff79c6;
+            --syn-preprocessor: #ffb86c;
+
+            /* Spacing */
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 16px;
+            --radius-xl: 24px;
+        }
+
+        /* ============================================================
+           RESET & BASE
+           ============================================================ */
+        *, *::before, *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            scroll-padding-top: 80px;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.7;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Animated background gradient orbs */
+        body::before {
+            content: '';
+            position: fixed;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background:
+                radial-gradient(circle at 20% 50%, rgba(99, 102, 241, 0.08) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(139, 92, 246, 0.06) 0%, transparent 50%),
+                radial-gradient(circle at 40% 80%, rgba(6, 182, 212, 0.05) 0%, transparent 50%);
+            z-index: -1;
+            animation: backgroundFloat 20s ease-in-out infinite;
+        }
+
+        @keyframes backgroundFloat {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            33% { transform: translate(20px, -30px) rotate(1deg); }
+            66% { transform: translate(-15px, 15px) rotate(-1deg); }
+        }
+
+        /* ============================================================
+           SCROLLBAR STYLING
+           ============================================================ */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: var(--bg-primary); }
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(180deg, var(--accent-blue), var(--accent-purple));
+            border-radius: 4px;
+        }
+
+        /* ============================================================
+           NAVIGATION
+           ============================================================ */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            background: rgba(10, 14, 26, 0.85);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border-subtle);
+            padding: 0 2rem;
+            transition: all 0.3s ease;
+        }
+
+        .navbar.scrolled {
+            background: rgba(10, 14, 26, 0.95);
+            box-shadow: var(--shadow-md);
+        }
+
+        .nav-inner {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 70px;
+        }
+
+        .nav-logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+        }
+
+        .nav-logo-icon {
+            width: 36px;
+            height: 36px;
+            background: var(--gradient-blue);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            font-weight: 800;
+            color: white;
+            box-shadow: 0 0 20px rgba(99, 102, 241, 0.3);
+        }
+
+        .nav-logo-text {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            letter-spacing: -0.5px;
+        }
+
+        .nav-logo-text span {
+            background: var(--gradient-blue);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 6px;
+            list-style: none;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text-secondary);
+            font-size: 0.82rem;
+            font-weight: 500;
+            padding: 6px 12px;
+            border-radius: var(--radius-sm);
+            transition: all 0.25s ease;
+            white-space: nowrap;
+        }
+
+        .nav-links a:hover,
+        .nav-links a.active {
+            color: var(--text-primary);
+            background: rgba(96, 165, 250, 0.1);
+        }
+
+        .nav-hamburger {
+            display: none;
+            flex-direction: column;
+            gap: 5px;
+            cursor: pointer;
+            padding: 8px;
+            border: none;
+            background: transparent;
+        }
+
+        .nav-hamburger span {
+            width: 24px;
+            height: 2px;
+            background: var(--text-primary);
+            border-radius: 2px;
+            transition: all 0.3s ease;
+        }
+
+        /* ============================================================
+           HERO SECTION
+           ============================================================ */
+        .hero {
+            padding: 140px 2rem 80px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(99, 102, 241, 0.12) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 20px;
+            background: rgba(96, 165, 250, 0.08);
+            border: 1px solid rgba(96, 165, 250, 0.2);
+            border-radius: 100px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: var(--accent-blue);
+            margin-bottom: 24px;
+            animation: fadeInUp 0.6s ease;
+        }
+
+        .hero-badge::before {
+            content: '📘';
+        }
+
+        .hero h1 {
+            font-size: clamp(2.5rem, 6vw, 4.5rem);
+            font-weight: 900;
+            letter-spacing: -2px;
+            line-height: 1.1;
+            margin-bottom: 20px;
+            animation: fadeInUp 0.6s ease 0.1s both;
+        }
+
+        .hero h1 .gradient-text {
+            background: linear-gradient(135deg, #60a5fa, #a78bfa, #f472b6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-subtitle {
+            font-size: 1.15rem;
+            color: var(--text-secondary);
+            max-width: 650px;
+            margin: 0 auto 40px;
+            font-weight: 400;
+            animation: fadeInUp 0.6s ease 0.2s both;
+        }
+
+        .hero-stats {
+            display: flex;
+            gap: 40px;
+            justify-content: center;
+            flex-wrap: wrap;
+            animation: fadeInUp 0.6s ease 0.3s both;
+        }
+
+        .hero-stat {
+            text-align: center;
+        }
+
+        .hero-stat-number {
+            font-size: 2rem;
+            font-weight: 800;
+            background: var(--gradient-blue);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-stat-label {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* ============================================================
+           CATEGORY CHIPS
+           ============================================================ */
+        .categories {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            flex-wrap: wrap;
+            padding: 0 2rem 60px;
+            animation: fadeInUp 0.6s ease 0.4s both;
+        }
+
+        .category-chip {
+            padding: 10px 22px;
+            border-radius: 100px;
+            font-size: 0.88rem;
+            font-weight: 600;
+            cursor: pointer;
+            border: 1px solid var(--border-subtle);
+            background: var(--bg-glass);
+            color: var(--text-secondary);
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+
+        .category-chip:hover,
+        .category-chip.active {
+            border-color: var(--accent-blue);
+            color: var(--accent-blue);
+            background: rgba(96, 165, 250, 0.08);
+            box-shadow: 0 0 20px rgba(96, 165, 250, 0.1);
+        }
+
+        .category-chip.sorting { --chip-color: var(--accent-cyan); }
+        .category-chip.sorting:hover, .category-chip.sorting.active {
+            border-color: var(--accent-cyan);
+            color: var(--accent-cyan);
+            background: rgba(34, 211, 238, 0.08);
+        }
+
+        .category-chip.graph { --chip-color: var(--accent-green); }
+        .category-chip.graph:hover, .category-chip.graph.active {
+            border-color: var(--accent-green);
+            color: var(--accent-green);
+            background: rgba(52, 211, 153, 0.08);
+        }
+
+        .category-chip.greedy { --chip-color: var(--accent-orange); }
+        .category-chip.greedy:hover, .category-chip.greedy.active {
+            border-color: var(--accent-orange);
+            color: var(--accent-orange);
+            background: rgba(251, 146, 60, 0.08);
+        }
+
+        .category-chip.dp { --chip-color: var(--accent-purple); }
+        .category-chip.dp:hover, .category-chip.dp.active {
+            border-color: var(--accent-purple);
+            color: var(--accent-purple);
+            background: rgba(167, 139, 250, 0.08);
+        }
+
+        /* ============================================================
+           MAIN CONTAINER
+           ============================================================ */
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 2rem 100px;
+        }
+
+        /* ============================================================
+           ALGORITHM CARD
+           ============================================================ */
+        .algo-card {
+            background: var(--bg-card);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-lg);
+            margin-bottom: 40px;
+            overflow: hidden;
+            transition: all 0.4s ease;
+            animation: cardFadeIn 0.5s ease both;
+        }
+
+        .algo-card:hover {
+            border-color: var(--border-accent);
+            box-shadow: var(--shadow-glow);
+            transform: translateY(-2px);
+        }
+
+        @keyframes cardFadeIn {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Card Header */
+        .algo-header {
+            padding: 28px 32px;
+            border-bottom: 1px solid var(--border-subtle);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 16px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .algo-header:hover {
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .algo-header-left {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .algo-number {
+            width: 44px;
+            height: 44px;
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+            font-weight: 800;
+            color: white;
+            flex-shrink: 0;
+        }
+
+        .algo-number.sorting { background: linear-gradient(135deg, #06b6d4, #0891b2); }
+        .algo-number.graph { background: linear-gradient(135deg, #10b981, #059669); }
+        .algo-number.greedy { background: linear-gradient(135deg, #f97316, #ea580c); }
+        .algo-number.dp { background: linear-gradient(135deg, #8b5cf6, #7c3aed); }
+
+        .algo-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+
+        .algo-tags {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .algo-tag {
+            padding: 4px 12px;
+            border-radius: 100px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .algo-tag.sorting {
+            background: rgba(34, 211, 238, 0.1);
+            color: var(--accent-cyan);
+        }
+        .algo-tag.graph {
+            background: rgba(52, 211, 153, 0.1);
+            color: var(--accent-green);
+        }
+        .algo-tag.greedy {
+            background: rgba(251, 146, 60, 0.1);
+            color: var(--accent-orange);
+        }
+        .algo-tag.dp {
+            background: rgba(167, 139, 250, 0.1);
+            color: var(--accent-purple);
+        }
+
+        .algo-tag.tc {
+            background: rgba(248, 113, 113, 0.1);
+            color: var(--accent-red);
+        }
+
+        .algo-toggle {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border-subtle);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .algo-toggle.open {
+            transform: rotate(180deg);
+            background: rgba(96, 165, 250, 0.1);
+            color: var(--accent-blue);
+        }
+
+        /* Card Body */
+        .algo-body {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .algo-body.open {
+            max-height: 10000px;
+        }
+
+        .algo-body-inner {
+            padding: 28px 32px;
+        }
+
+        /* Concept Box */
+        .concept-box {
+            background: rgba(96, 165, 250, 0.05);
+            border-left: 3px solid var(--accent-blue);
+            border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+            padding: 20px 24px;
+            margin-bottom: 24px;
+        }
+
+        .concept-box h3 {
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--accent-blue);
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .concept-box p,
+        .concept-box ul {
+            color: var(--text-secondary);
+            font-size: 0.92rem;
+            line-height: 1.8;
+        }
+
+        .concept-box ul {
+            padding-left: 20px;
+        }
+
+        .concept-box ul li {
+            margin-bottom: 4px;
+        }
+
+        /* Key Formula Box */
+        .key-formula {
+            background: rgba(167, 139, 250, 0.06);
+            border: 1px solid rgba(167, 139, 250, 0.15);
+            border-radius: var(--radius-md);
+            padding: 18px 24px;
+            margin-bottom: 24px;
+        }
+
+        .key-formula h4 {
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: var(--accent-purple);
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .key-formula code {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.88rem;
+            color: var(--accent-yellow);
+            background: rgba(0, 0, 0, 0.3);
+            padding: 2px 8px;
+            border-radius: 4px;
+        }
+
+        /* Algorithm Steps */
+        .algo-steps {
+            margin-bottom: 24px;
+        }
+
+        .algo-steps h3 {
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--accent-green);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .algo-steps ol {
+            padding-left: 20px;
+            color: var(--text-secondary);
+            font-size: 0.92rem;
+        }
+
+        .algo-steps ol li {
+            margin-bottom: 6px;
+            padding-left: 4px;
+        }
+
+        .algo-steps ol li::marker {
+            color: var(--accent-green);
+            font-weight: 700;
+        }
+
+        /* ============================================================
+           CODE BLOCK
+           ============================================================ */
+        .code-section {
+            margin-top: 24px;
+        }
+
+        .code-section-label {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 12px;
+        }
+
+        .code-section-label h3 {
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--accent-cyan);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .copy-btn {
+            padding: 6px 16px;
+            border-radius: var(--radius-sm);
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border-subtle);
+            color: var(--text-secondary);
+            font-size: 0.8rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            font-family: 'Inter', sans-serif;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .copy-btn:hover {
+            background: rgba(96, 165, 250, 0.1);
+            border-color: var(--accent-blue);
+            color: var(--accent-blue);
+        }
+
+        .copy-btn.copied {
+            background: rgba(52, 211, 153, 0.1);
+            border-color: var(--accent-green);
+            color: var(--accent-green);
+        }
+
+        .code-block {
+            background: var(--bg-code);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-md);
+            overflow: hidden;
+            position: relative;
+        }
+
+        .code-block-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 20px;
+            background: rgba(255, 255, 255, 0.02);
+            border-bottom: 1px solid var(--border-subtle);
+        }
+
+        .code-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        .code-dot.red { background: #ff5f57; }
+        .code-dot.yellow { background: #febc2e; }
+        .code-dot.green { background: #28c840; }
+
+        .code-block-filename {
+            margin-left: auto;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .code-block pre {
+            padding: 20px 24px;
+            overflow-x: auto;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            line-height: 1.8;
+            tab-size: 4;
+        }
+
+        .code-block pre code {
+            color: var(--text-primary);
+        }
+
+        /* Syntax Highlighting Classes */
+        .kw { color: var(--syn-keyword); font-weight: 600; }    /* keywords */
+        .tp { color: var(--syn-type); }                          /* types */
+        .st { color: var(--syn-string); }                        /* strings */
+        .nm { color: var(--syn-number); }                        /* numbers */
+        .cm { color: var(--syn-comment); font-style: italic; }   /* comments */
+        .fn { color: var(--syn-function); }                      /* functions */
+        .op { color: var(--syn-operator); }                      /* operators */
+        .pp { color: var(--syn-preprocessor); }                  /* preprocessor */
+
+        /* Example Output Box */
+        .example-output {
+            margin-top: 20px;
+            background: rgba(52, 211, 153, 0.04);
+            border: 1px solid rgba(52, 211, 153, 0.15);
+            border-radius: var(--radius-md);
+            padding: 18px 24px;
+        }
+
+        .example-output h4 {
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: var(--accent-green);
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .example-output pre {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.84rem;
+            color: var(--text-secondary);
+            line-height: 1.7;
+            white-space: pre-wrap;
+        }
+
+        /* ============================================================
+           FOOTER
+           ============================================================ */
+        .footer {
+            text-align: center;
+            padding: 40px 2rem;
+            border-top: 1px solid var(--border-subtle);
+            color: var(--text-muted);
+            font-size: 0.85rem;
+        }
+
+        .footer .heart {
+            color: var(--accent-pink);
+            display: inline-block;
+            animation: heartbeat 1.5s ease infinite;
+        }
+
+        @keyframes heartbeat {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.15); }
+        }
+
+        /* ============================================================
+           BACK TO TOP
+           ============================================================ */
+        .back-to-top {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: var(--gradient-blue);
+            border: none;
+            color: white;
+            font-size: 1.2rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: var(--shadow-md);
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(20px);
+            transition: all 0.3s ease;
+            z-index: 999;
+        }
+
+        .back-to-top.visible {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .back-to-top:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 30px rgba(99, 102, 241, 0.4);
+        }
+
+        /* ============================================================
+           RESPONSIVE
+           ============================================================ */
+        @media (max-width: 900px) {
+            .nav-links {
+                display: none;
+                position: absolute;
+                top: 70px;
+                left: 0;
+                right: 0;
+                background: rgba(10, 14, 26, 0.98);
+                flex-direction: column;
+                padding: 16px;
+                border-bottom: 1px solid var(--border-subtle);
+            }
+
+            .nav-links.open { display: flex; }
+
+            .nav-hamburger { display: flex; }
+
+            .algo-header {
+                padding: 20px 20px;
+            }
+
+            .algo-body-inner {
+                padding: 20px;
+            }
+
+            .code-block pre {
+                padding: 16px;
+                font-size: 0.78rem;
+            }
+
+            .hero h1 {
+                letter-spacing: -1px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .algo-title {
+                font-size: 1.1rem;
+            }
+
+            .hero-stats {
+                gap: 24px;
+            }
+        }
+
+        /* ============================================================
+           SEARCH BAR
+           ============================================================ */
+        .search-container {
+            max-width: 500px;
+            margin: 0 auto 40px;
+            position: relative;
+            animation: fadeInUp 0.6s ease 0.35s both;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 14px 20px 14px 48px;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid var(--border-subtle);
+            border-radius: 100px;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.95rem;
+            color: var(--text-primary);
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .search-input::placeholder {
+            color: var(--text-muted);
+        }
+
+        .search-input:focus {
+            border-color: var(--accent-blue);
+            background: rgba(96, 165, 250, 0.05);
+            box-shadow: 0 0 20px rgba(96, 165, 250, 0.1);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 18px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+            font-size: 1rem;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ============================================================
+         NAVIGATION BAR
+         ============================================================ -->
+    <nav class="navbar" id="navbar">
+        <div class="nav-inner">
+            <a href="#" class="nav-logo">
+                <div class="nav-logo-icon">A</div>
+                <div class="nav-logo-text"><span>Algo</span>Guide</div>
+            </a>
+
+            <ul class="nav-links" id="navLinks">
+                <li><a href="#bubble-sort">Bubble Sort</a></li>
+                <li><a href="#merge-sort">Merge Sort</a></li>
+                <li><a href="#quick-sort">Quick Sort</a></li>
+                <li><a href="#heap-sort">Heap Sort</a></li>
+                <li><a href="#dfs">DFS</a></li>
+                <li><a href="#dijkstra">Dijkstra</a></li>
+                <li><a href="#kruskal">Kruskal</a></li>
+                <li><a href="#activity">Activity</a></li>
+                <li><a href="#fractional-knapsack">F. Knapsack</a></li>
+                <li><a href="#01-knapsack">0/1 Knapsack</a></li>
+                <li><a href="#rod-cutting">Rod Cutting</a></li>
+                <li><a href="#lcs">LCS</a></li>
+            </ul>
+
+            <button class="nav-hamburger" id="hamburger" onclick="toggleNav()">
+                <span></span><span></span><span></span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- ============================================================
+         HERO SECTION
+         ============================================================ -->
+    <section class="hero">
+        <div class="hero-badge">Algorithm Help Guide</div>
+        <h1>Master <span class="gradient-text">DSA Algorithms</span><br>With Commented Code</h1>
+        <p class="hero-subtitle">
+            A complete reference of 12 essential algorithms — sorting, graphs, greedy &amp; dynamic programming — with detailed explanations, key formulas, and working C code.
+        </p>
+        <div class="hero-stats">
+            <div class="hero-stat">
+                <div class="hero-stat-number">12</div>
+                <div class="hero-stat-label">Algorithms</div>
+            </div>
+            <div class="hero-stat">
+                <div class="hero-stat-number">4</div>
+                <div class="hero-stat-label">Categories</div>
+            </div>
+            <div class="hero-stat">
+                <div class="hero-stat-number">C</div>
+                <div class="hero-stat-label">Language</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================================
+         SEARCH BAR
+         ============================================================ -->
+    <div class="search-container">
+        <span class="search-icon">🔍</span>
+        <input type="text" class="search-input" id="searchInput" placeholder="Search algorithms..." oninput="filterAlgorithms(this.value)">
+    </div>
+
+    <!-- ============================================================
+         CATEGORY CHIPS
+         ============================================================ -->
+    <div class="categories">
+        <button class="category-chip active" onclick="filterCategory('all', this)">All</button>
+        <button class="category-chip sorting" onclick="filterCategory('sorting', this)">🔄 Sorting</button>
+        <button class="category-chip graph" onclick="filterCategory('graph', this)">🌐 Graph</button>
+        <button class="category-chip greedy" onclick="filterCategory('greedy', this)">💡 Greedy</button>
+        <button class="category-chip dp" onclick="filterCategory('dp', this)">🧩 Dynamic Programming</button>
+    </div>
+
+    <!-- ============================================================
+         ALGORITHMS CONTAINER
+         ============================================================ -->
+    <div class="container" id="algorithmsContainer">
+
+        <!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+             1. BUBBLE SORT
+             ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+        <div class="algo-card" id="bubble-sort" data-category="sorting" data-name="Bubble Sort">
+            <div class="algo-header" onclick="toggleCard(this)">
+                <div class="algo-header-left">
+                    <div class="algo-number sorting">1</div>
+                    <div class="algo-title">Bubble Sort</div>
+                </div>
+                <div class="algo-tags">
+                    <span class="algo-tag sorting">Sorting</span>
+                    <span class="algo-tag tc">O(n²)</span>
+                </div>
+                <div class="algo-toggle">▼</div>
+            </div>
+            <div class="algo-body">
+                <div class="algo-body-inner">
+
+                    <div class="concept-box">
+                        <h3>🧠 Core Concept</h3>
+                        <p>Bubble Sort repeatedly steps through the list, compares adjacent elements, and <strong>swaps</strong> them if they are in the wrong order. The largest unsorted element "bubbles up" to its correct position in each pass.</p>
+                        <ul>
+                            <li>In each pass, the largest remaining element reaches its final position.</li>
+                            <li>The outer loop shrinks by 1 each iteration (already sorted elements at the end).</li>
+                            <li>Simple but inefficient for large datasets.</li>
+                        </ul>
+                    </div>
+
+                    <div class="key-formula">
+                        <h4>⭐ Key Logic</h4>
+                        <p>Compare <code>arr[j]</code> with <code>arr[j+1]</code> — if left > right, swap them.</p>
+                    </div>
+
+                    <div class="algo-steps">
+                        <h3>📋 Algorithm Steps</h3>
+                        <ol>
+                            <li>Start with the full array (outer loop i from n down to 1)</li>
+                            <li>For each element j from 0 to i, compare arr[j] and arr[j+1]</li>
+                            <li>If arr[j] &gt; arr[j+1], swap them</li>
+                            <li>After each pass, the largest element is at the end</li>
+                            <li>Repeat until no swaps are needed</li>
+                        </ol>
+                    </div>
+
+                    <div class="code-section">
+                        <div class="code-section-label">
+                            <h3>💻 Complete Code</h3>
+                            <button class="copy-btn" onclick="copyCode(this)">📋 Copy</button>
+                        </div>
+                        <div class="code-block">
+                            <div class="code-block-header">
+                                <div class="code-dot red"></div>
+                                <div class="code-dot yellow"></div>
+                                <div class="code-dot green"></div>
+                                <span class="code-block-filename">bubblesort.c</span>
+                            </div>
+<pre><code><span class="pp">#include</span> <span class="st">&lt;stdio.h&gt;</span>
+
+<span class="tp">int</span> <span class="fn">main</span>() {
+    <span class="fn">printf</span>(<span class="st">"bubble sort\n"</span>);
+
+    <span class="cm">/* Initialize array with unsorted values */</span>
+    <span class="tp">int</span> arr1[<span class="nm">5</span>] = {<span class="nm">4</span>, <span class="nm">3</span>, <span class="nm">5</span>, <span class="nm">2</span>, <span class="nm">1</span>};
+    <span class="tp">int</span> temp;              <span class="cm">/* Temporary variable for swapping */</span>
+    <span class="tp">int</span> n = <span class="nm">5</span>;             <span class="cm">/* Number of elements */</span>
+    <span class="tp">int</span> i, j;
+
+    <span class="cm">/* Outer loop: shrink the unsorted portion from n down to 1
+       After each pass, the largest element bubbles to the end */</span>
+    <span class="kw">for</span> (<span class="tp">int</span> i = n; i &gt; <span class="nm">1</span>; i--) {
+
+        <span class="cm">/* Inner loop: compare adjacent elements from start to i */</span>
+        <span class="kw">for</span> (<span class="tp">int</span> j = <span class="nm">0</span>; j &lt; i; j++) {
+
+            <span class="cm">/* If current element is greater than next, swap them */</span>
+            <span class="kw">if</span> (arr1[j] &gt; arr1[j + <span class="nm">1</span>]) {
+                temp = arr1[j];
+                arr1[j] = arr1[j + <span class="nm">1</span>];
+                arr1[j + <span class="nm">1</span>] = temp;
+            }
+        }
+    }
+
+    <span class="cm">/* Print the sorted array */</span>
+    <span class="kw">for</span> (<span class="tp">int</span> i = <span class="nm">0</span>; i &lt; n; i++) {
+        <span class="fn">printf</span>(<span class="st">"%d "</span>, arr1[i]);
+    }
+
+    <span class="kw">return</span> <span class="nm">0</span>;
+}</code></pre>
+                        </div>
+                    </div>
+
+                    <div class="example-output">
+                        <h4>▶ Example Output</h4>
+<pre>bubble sort
+1 2 3 4 5</pre>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+             2. MERGE SORT
+             ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+        <div class="algo-card" id="merge-sort" data-category="sorting" data-name="Merge Sort">
+            <div class="algo-header" onclick="toggleCard(this)">
+                <div class="algo-header-left">
+                    <div class="algo-number sorting">2</div>
+                    <div class="algo-title">Merge Sort</div>
+                </div>
+                <div class="algo-tags">
+                    <span class="algo-tag sorting">Sorting</span>
+                    <span class="algo-tag tc">O(n log n)</span>
+                </div>
+                <div class="algo-toggle">▼</div>
+            </div>
+            <div class="algo-body">
+                <div class="algo-body-inner">
+
+                    <div class="concept-box">
+                        <h3>🧠 Core Concept</h3>
+                        <p>Merge Sort uses the <strong>Divide and Conquer</strong> strategy: DIVIDE → SORT → MERGE.</p>
+                        <ul>
+                            <li>Divide the array into two halves</li>
+                            <li>Recursively sort each half</li>
+                            <li>Merge the two sorted halves back together</li>
+                            <li>Uses a temporary array during the merge step</li>
+                        </ul>
+                    </div>
+
+                    <div class="key-formula">
+                        <h4>⭐ Hardest Part to Remember — The Merge Loop</h4>
+                        <p>
+                            <code>while (i &lt;= mid &amp;&amp; j &lt;= right)</code> — compare elements from both halves and pick the smaller one. Then copy remaining elements from whichever half isn't exhausted.
+                        </p>
+                    </div>
+
+                    <div class="algo-steps">
+                        <h3>📋 Algorithm Steps</h3>
+                        <ol>
+                            <li>If left &lt; right, find mid = (left + right) / 2</li>
+                            <li>mergeSort(left half) — left to mid</li>
+                            <li>mergeSort(right half) — mid+1 to right</li>
+                            <li>merge() — combine both sorted halves using a temp array</li>
+                            <li>Copy merged result back into original array</li>
+                        </ol>
+                    </div>
+
+                    <div class="code-section">
+                        <div class="code-section-label">
+                            <h3>💻 Complete Code</h3>
+                            <button class="copy-btn" onclick="copyCode(this)">📋 Copy</button>
+                        </div>
+                        <div class="code-block">
+                            <div class="code-block-header">
+                                <div class="code-dot red"></div>
+                                <div class="code-dot yellow"></div>
+                                <div class="code-dot green"></div>
+                                <span class="code-block-filename">mergesort.c</span>
+                            </div>
+<pre><code><span class="pp">#include</span> <span class="st">&lt;stdio.h&gt;</span>
+
+<span class="cm">/* ─── merge() ───────────────────────────────────────────────
+   Merges two sorted sub-arrays: arr[left..mid] and arr[mid+1..right]
+   Uses a temporary array to hold the merged result.
+   ────────────────────────────────────────────────────────── */</span>
+<span class="tp">void</span> <span class="fn">merge</span>(<span class="tp">int</span> arr[], <span class="tp">int</span> left, <span class="tp">int</span> mid, <span class="tp">int</span> right) {
+
+    <span class="tp">int</span> i = left;              <span class="cm">/* Pointer for left sub-array */</span>
+    <span class="tp">int</span> j = mid + <span class="nm">1</span>;           <span class="cm">/* Pointer for right sub-array */</span>
+    <span class="tp">int</span> k = <span class="nm">0</span>;                 <span class="cm">/* Pointer for temp array */</span>
+
+    <span class="tp">int</span> temp[right - left + <span class="nm">1</span>]; <span class="cm">/* Temporary array to hold merged result */</span>
+
+    <span class="cm">/* Compare elements from both halves and pick the smaller one */</span>
+    <span class="kw">while</span> (i &lt;= mid &amp;&amp; j &lt;= right) {
+
+        <span class="kw">if</span> (arr[i] &lt;= arr[j])
+            temp[k++] = arr[i++];  <span class="cm">/* Left element is smaller */</span>
+        <span class="kw">else</span>
+            temp[k++] = arr[j++];  <span class="cm">/* Right element is smaller */</span>
+    }
+
+    <span class="cm">/* Copy any remaining elements from left half */</span>
+    <span class="kw">while</span> (i &lt;= mid)
+        temp[k++] = arr[i++];
+
+    <span class="cm">/* Copy any remaining elements from right half */</span>
+    <span class="kw">while</span> (j &lt;= right)
+        temp[k++] = arr[j++];
+
+    <span class="cm">/* Copy merged elements back into the original array */</span>
+    <span class="kw">for</span> (i = left, k = <span class="nm">0</span>; i &lt;= right; i++, k++)
+        arr[i] = temp[k];
+}
+
+<span class="cm">/* ─── mergeSort() ───────────────────────────────────────────
+   Recursively divides the array in half, sorts each half,
+   then merges them back together.
+   ────────────────────────────────────────────────────────── */</span>
+<span class="tp">void</span> <span class="fn">mergeSort</span>(<span class="tp">int</span> arr[], <span class="tp">int</span> left, <span class="tp">int</span> right) {
+
+    <span class="kw">if</span> (left &lt; right) {
+
+        <span class="tp">int</span> mid = (left + right) / <span class="nm">2</span>;  <span class="cm">/* Find the midpoint */</span>
+
+        <span class="fn">mergeSort</span>(arr, left, mid);       <span class="cm">/* Sort left half */</span>
+
+        <span class="fn">mergeSort</span>(arr, mid + <span class="nm">1</span>, right);  <span class="cm">/* Sort right half */</span>
+
+        <span class="fn">merge</span>(arr, left, mid, right);    <span class="cm">/* Merge both sorted halves */</span>
+    }
+}
+
+<span class="tp">int</span> <span class="fn">main</span>() {
+
+    <span class="tp">int</span> n;
+
+    <span class="fn">printf</span>(<span class="st">"Enter size: "</span>);
+    <span class="fn">scanf</span>(<span class="st">"%d"</span>, &amp;n);
+
+    <span class="tp">int</span> arr[n];
+
+    <span class="fn">printf</span>(<span class="st">"Enter elements:\n"</span>);
+
+    <span class="kw">for</span> (<span class="tp">int</span> i = <span class="nm">0</span>; i &lt; n; i++)
+        <span class="fn">scanf</span>(<span class="st">"%d"</span>, &amp;arr[i]);
+
+    <span class="fn">mergeSort</span>(arr, <span class="nm">0</span>, n - <span class="nm">1</span>);       <span class="cm">/* Sort the entire array */</span>
+
+    <span class="fn">printf</span>(<span class="st">"Sorted array:\n"</span>);
+
+    <span class="kw">for</span> (<span class="tp">int</span> i = <span class="nm">0</span>; i &lt; n; i++)
+        <span class="fn">printf</span>(<span class="st">"%d "</span>, arr[i]);
+
+    <span class="kw">return</span> <span class="nm">0</span>;
+}</code></pre>
+                        </div>
+                    </div>
+
+                    <div class="example-output">
+                        <h4>▶ Example Output</h4>
+<pre>Enter size: 6
+Enter elements:
+38 27 43 3 9 82
+
+Sorted array:
+3 9 27 38 43 82</pre>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+             3. QUICK SORT
+             ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+        <div class="algo-card" id="quick-sort" data-category="sorting" data-name="Quick Sort">
+            <div class="algo-header" onclick="toggleCard(this)">
+                <div class="algo-header-left">
+                    <div class="algo-number sorting">3</div>
+                    <div class="algo-title">Quick Sort</div>
+                </div>
+                <div class="algo-tags">
+                    <span class="algo-tag sorting">Sorting</span>
+                    <span class="algo-tag tc">O(n log n)</span>
+                </div>
+                <div class="algo-toggle">▼</div>
+            </div>
+            <div class="algo-body">
+                <div class="algo-body-inner">
+
+                    <div class="concept-box">
+                        <h3>🧠 Core Concept</h3>
+                        <p>Quick Sort picks a <strong>pivot</strong> element and partitions the array so that all elements smaller than pivot go left, and all larger go right. Then recursively sort both sides.</p>
+                        <ul>
+                            <li><strong>Pivot</strong> = last element (arr[high])</li>
+                            <li><strong>i</strong> = boundary of "smaller" elements (starts at low - 1)</li>
+                            <li><strong>j</strong> = scanner that checks every element</li>
+                            <li>After partitioning, pivot is placed at its <strong>correct final position</strong></li>
+                        </ul>
+                    </div>
+
+                    <div class="key-formula">
+                        <h4>⭐ Key Parts to Remember</h4>
+                        <p>
+                            <code>i = low - 1</code> — boundary tracker<br>
+                            <code>if (arr[j] &lt; pivot) { i++; swap; }</code> — move smaller elements left<br>
+                            <code>swap(&amp;arr[i+1], &amp;arr[high])</code> — place pivot at correct position<br>
+                            <code>return i + 1</code> — return pivot's final position
+                        </p>
+                    </div>
+
+                    <div class="algo-steps">
+                        <h3>📋 Algorithm Steps</h3>
+                        <ol>
+                            <li>Choose last element as pivot</li>
+                            <li>Partition: scan with j, use i to track smaller-element boundary</li>
+                            <li>Get pivot's final position p</li>
+                            <li>Recursively sort left (low to p-1) and right (p+1 to high)</li>
+                        </ol>
+                    </div>
+
+                    <div class="code-section">
+                        <div class="code-section-label">
+                            <h3>💻 Complete Code</h3>
+                            <button class="copy-btn" onclick="copyCode(this)">📋 Copy</button>
+                        </div>
+                        <div class="code-block">
+                            <div class="code-block-header">
+                                <div class="code-dot red"></div>
+                                <div class="code-dot yellow"></div>
+                                <div class="code-dot green"></div>
+                                <span class="code-block-filename">QuickSort.c</span>
+                            </div>
+<pre><code><span class="pp">#include</span> <span class="st">&lt;stdio.h&gt;</span>
+
+<span class="cm">/* ─── swap() ─────────────────────────────────────────────
+   Swaps two integers using pointers.
+   ────────────────────────────────────────────────────────── */</span>
+<span class="tp">void</span> <span class="fn">swap</span>(<span class="tp">int</span> *a, <span class="tp">int</span> *b) {
+    <span class="tp">int</span> temp = *a;
+    *a = *b;
+    *b = temp;
+}
+
+<span class="cm">/* ─── partition() ────────────────────────────────────────
+   Chooses the last element as pivot.
+   Rearranges array so all elements &lt; pivot go left,
+   all elements &gt; pivot go right.
+   Returns the final index of the pivot.
+   ────────────────────────────────────────────────────────── */</span>
+<span class="tp">int</span> <span class="fn">partition</span>(<span class="tp">int</span> arr[], <span class="tp">int</span> low, <span class="tp">int</span> high) {
+
+    <span class="tp">int</span> pivot = arr[high];   <span class="cm">/* Choose last element as pivot */</span>
+
+    <span class="tp">int</span> i = low - <span class="nm">1</span>;         <span class="cm">/* i = boundary of smaller elements
+                                Starts BEFORE the array segment */</span>
+
+    <span class="cm">/* j scans from low to high-1 */</span>
+    <span class="kw">for</span> (<span class="tp">int</span> j = low; j &lt; high; j++) {
+
+        <span class="cm">/* If current element is smaller than pivot,
+           move it to the "smaller" side */</span>
+        <span class="kw">if</span> (arr[j] &lt; pivot) {
+            i++;                        <span class="cm">/* Expand smaller boundary */</span>
+            <span class="fn">swap</span>(&amp;arr[i], &amp;arr[j]);  <span class="cm">/* Swap element into position */</span>
+        }
+    }
+
+    <span class="cm">/* Place pivot at its correct final position (i+1) */</span>
+    <span class="fn">swap</span>(&amp;arr[i + <span class="nm">1</span>], &amp;arr[high]);
+
+    <span class="kw">return</span> i + <span class="nm">1</span>;  <span class="cm">/* Return pivot's final index */</span>
+}
+
+<span class="cm">/* ─── quickSort() ────────────────────────────────────────
+   Main recursive QuickSort function.
+   Partitions, then sorts left and right sub-arrays.
+   ────────────────────────────────────────────────────────── */</span>
+<span class="tp">void</span> <span class="fn">quickSort</span>(<span class="tp">int</span> arr[], <span class="tp">int</span> low, <span class="tp">int</span> high) {
+
+    <span class="kw">if</span> (low &lt; high) {
+
+        <span class="tp">int</span> p = <span class="fn">partition</span>(arr, low, high);  <span class="cm">/* Get pivot position */</span>
+
+        <span class="fn">quickSort</span>(arr, low, p - <span class="nm">1</span>);         <span class="cm">/* Sort left of pivot */</span>
+
+        <span class="fn">quickSort</span>(arr, p + <span class="nm">1</span>, high);         <span class="cm">/* Sort right of pivot */</span>
+    }
+}
+
+<span class="tp">int</span> <span class="fn">main</span>() {
+    <span class="tp">int</span> n;
+
+    <span class="fn">printf</span>(<span class="st">"Enter number of elements: "</span>);
+    <span class="fn">scanf</span>(<span class="st">"%d"</span>, &amp;n);
+
+    <span class="tp">int</span> arr[n];
+
+    <span class="fn">printf</span>(<span class="st">"Enter elements:\n"</span>);
+
+    <span class="kw">for</span> (<span class="tp">int</span> i = <span class="nm">0</span>; i &lt; n; i++) {
+        <span class="fn">scanf</span>(<span class="st">"%d"</span>, &amp;arr[i]);
+    }
+
+    <span class="fn">quickSort</span>(arr, <span class="nm">0</span>, n - <span class="nm">1</span>);  <span class="cm">/* Sort the entire array */</span>
+
+    <span class="fn">printf</span>(<span class="st">"Sorted array: "</span>);
+
+    <span class="kw">for</span> (<span class="tp">int</span> i = <span class="nm">0</span>; i &lt; n; i++) {
+        <span class="fn">printf</span>(<span class="st">"%d "</span>, arr[i]);
+    }
+
+    <span class="kw">return</span> <span class="nm">0</span>;
+}</code></pre>
+                        </div>
+                    </div>
+
+                    <div class="example-output">
+                        <h4>▶ Example Output</h4>
+<pre>Enter number of elements: 6
+Enter elements:
+10 7 8 9 1 5
+
+Sorted array: 1 5 7 8 9 10</pre>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+             4. HEAP SORT
+             ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+        <div class="algo-card" id="heap-sort" data-category="sorting" data-name="Heap Sort">
+            <div class="algo-header" onclick="toggleCard(this)">
+                <div class="algo-header-left">
+                    <div class="algo-number sorting">4</div>
+                    <div class="algo-title">Heap Sort</div>
+                </div>
+                <div class="algo-tags">
+                    <span class="algo-tag sorting">Sorting</span>
+                    <span class="algo-tag tc">O(n log n)</span>
+                </div>
+                <div class="algo-toggle">▼</div>
+            </div>
+            <div class="algo-body">
+                <div class="algo-body-inner">
+
+                    <div class="concept-box">
+                        <h3>🧠 Core Concept</h3>
+                        <p>Heap Sort builds a <strong>Max Heap</strong> from the array, then repeatedly extracts the maximum element.</p>
+                        <ul>
+                            <li><strong>Max Heap property:</strong> Parent ≥ children</li>
+                            <li>For index i: <strong>left = 2*i + 1</strong>, <strong>right = 2*i + 2</strong></li>
+                            <li>BUILD MAX HEAP → Swap root with last → Reduce heap size → Heapify → Repeat</li>
+                        </ul>
+                    </div>
+
+                    <div class="key-formula">
+                        <h4>⭐ Most Important — heapify() Logic</h4>
+                        <p>
+                            <code>largest = i;</code><br>
+                            <code>if (left &lt; n &amp;&amp; arr[left] &gt; arr[largest]) largest = left;</code><br>
+                            <code>if (right &lt; n &amp;&amp; arr[right] &gt; arr[largest]) largest = right;</code><br>
+                            <code>if (largest != i) { swap; heapify(arr, n, largest); }</code>
+                        </p>
+                    </div>
+
+                    <div class="algo-steps">
+                        <h3>📋 Algorithm Steps</h3>
+                        <ol>
+                            <li>Build Max Heap — heapify from n/2 - 1 down to 0</li>
+                            <li>Swap root (max) with the last element</li>
+                            <li>Reduce heap size by 1</li>
+                            <li>Heapify the root to restore Max Heap property</li>
+                            <li>Repeat until heap size is 1</li>
+                        </ol>
+                    </div>
+
+                    <div class="code-section">
+                        <div class="code-section-label">
+                            <h3>💻 Complete Code</h3>
+                            <button class="copy-btn" onclick="copyCode(this)">📋 Copy</button>
+                        </div>
+                        <div class="code-block">
+                            <div class="code-block-header">
+                                <div class="code-dot red"></div>
+                                <div class="code-dot yellow"></div>
+                                <div class="code-dot green"></div>
+                                <span class="code-block-filename">HeapSort.c</span>
+                            </div>
+<pre><code><span class="pp">#include</span> <span class="st">&lt;stdio.h&gt;</span>
+
+<span class="cm">/* ─── swap() ─────────────────────────────────────────────
+   Swaps two integers using pointers.
+   ────────────────────────────────────────────────────────── */</span>
+<span class="tp">void</span> <span class="fn">swap</span>(<span class="tp">int</span> *a, <span class="tp">int</span> *b) {
+    <span class="tp">int</span> temp = *a;
+    *a = *b;
+    *b = temp;
+}
+
+<span class="cm">/* ─── heapify() ──────────────────────────────────────────
+   Ensures the Max Heap property for the subtree rooted at index i.
+   - Compares node i with its left (2*i+1) and right (2*i+2) children
+   - If a child is larger, swap with the largest child
+   - Recursively heapify the affected subtree
+   ────────────────────────────────────────────────────────── */</span>
+<span class="tp">void</span> <span class="fn">heapify</span>(<span class="tp">int</span> arr[], <span class="tp">int</span> n, <span class="tp">int</span> i) {
+
+    <span class="tp">int</span> largest = i;               <span class="cm">/* Assume root is largest */</span>
+
+    <span class="tp">int</span> left = <span class="nm">2</span> * i + <span class="nm">1</span>;          <span class="cm">/* Left child index */</span>
+    <span class="tp">int</span> right = <span class="nm">2</span> * i + <span class="nm">2</span>;         <span class="cm">/* Right child index */</span>
+
+    <span class="cm">/* If left child exists and is greater than root */</span>
+    <span class="kw">if</span> (left &lt; n &amp;&amp; arr[left] &gt; arr[largest])
+        largest = left;
+
+    <span class="cm">/* If right child exists and is greater than current largest */</span>
+    <span class="kw">if</span> (right &lt; n &amp;&amp; arr[right] &gt; arr[largest])
+        largest = right;
+
+    <span class="cm">/* If largest is not the root, swap and continue heapifying */</span>
+    <span class="kw">if</span> (largest != i) {
+        <span class="fn">swap</span>(&amp;arr[i], &amp;arr[largest]);
+        <span class="fn">heapify</span>(arr, n, largest);     <span class="cm">/* Recursively fix the subtree */</span>
+    }
+}
+
+<span class="cm">/* ─── heapSort() ─────────────────────────────────────────
+   1. Builds a Max Heap from the array
+   2. Extracts elements one by one from the heap
+   ────────────────────────────────────────────────────────── */</span>
+<span class="tp">void</span> <span class="fn">heapSort</span>(<span class="tp">int</span> arr[], <span class="tp">int</span> n) {
+
+    <span class="cm">/* Step 1: Build Max Heap
+       Start from the last non-leaf node (n/2 - 1) and heapify each */</span>
+    <span class="kw">for</span> (<span class="tp">int</span> i = n / <span class="nm">2</span> - <span class="nm">1</span>; i &gt;= <span class="nm">0</span>; i--)
+        <span class="fn">heapify</span>(arr, n, i);
+
+    <span class="cm">/* Step 2: Extract elements from heap
+       Swap root (max) with last element, shrink heap, re-heapify */</span>
+    <span class="kw">for</span> (<span class="tp">int</span> i = n - <span class="nm">1</span>; i &gt; <span class="nm">0</span>; i--) {
+        <span class="fn">swap</span>(&amp;arr[<span class="nm">0</span>], &amp;arr[i]);   <span class="cm">/* Move current max to end */</span>
+        <span class="fn">heapify</span>(arr, i, <span class="nm">0</span>);       <span class="cm">/* Heapify reduced heap */</span>
+    }
+}
+
+<span class="tp">int</span> <span class="fn">main</span>() {
+    <span class="tp">int</span> n;
+
+    <span class="fn">printf</span>(<span class="st">"Enter size: "</span>);
+    <span class="fn">scanf</span>(<span class="st">"%d"</span>, &amp;n);
+
+    <span class="tp">int</span> arr[n];
+
+    <span class="fn">printf</span>(<span class="st">"Enter elements:\n"</span>);
+
+    <span class="kw">for</span> (<span class="tp">int</span> i = <span class="nm">0</span>; i &lt; n; i++)
+        <span class="fn">scanf</span>(<span class="st">"%d"</span>, &amp;arr[i]);
+
+    <span class="fn">heapSort</span>(arr, n);           <span class="cm">/* Perform Heap Sort */</span>
+
+    <span class="fn">printf</span>(<span class="st">"Sorted array:\n"</span>);
+
+    <span class="kw">for</span> (<span class="tp">int</span> i = <span class="nm">0</span>; i &lt; n; i++)
+        <span class="fn">printf</span>(<span class="st">"%d "</span>, arr[i]);
+
+    <span class="kw">return</span> <span class="nm">0</span>;
+}</code></pre>
+                        </div>
+                    </div>
+
+                    <div class="example-output">
+                        <h4>▶ Example Output</h4>
+<pre>Enter size: 6
+Enter elements:
+12 11 13 5 6 7
+
+Sorted array:
+5 6 7 11 12 13</pre>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+             5. DFS — DEPTH FIRST SEARCH
+             ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+        <div class="algo-card" id="dfs" data-category="graph" data-name="Depth First Search DFS">
+            <div class="algo-header" onclick="toggleCard(this)">
+                <div class="algo-header-left">
+                    <div class="algo-number graph">5</div>
+                    <div class="algo-title">DFS — Depth First Search</div>
+                </div>
+                <div class="algo-tags">
+                    <span class="algo-tag graph">Graph</span>
+                    <span class="algo-tag tc">O(V + E)</span>
+                </div>
+                <div class="algo-toggle">▼</div>
+            </div>
+            <div class="algo-body">
+                <div class="algo-body-inner">
+
+                    <div class="concept-box">
+                        <h3>🧠 Core Concept</h3>
+                        <p>DFS goes as <strong>deep as possible</strong> before backtracking. It uses recursion (implicit stack).</p>
+                        <ul>
+                            <li>Visit a vertex → Mark it visited → Check all neighbours</li>
+                            <li>If neighbour is connected AND unvisited → recursively DFS on it</li>
+                            <li>Uses an adjacency matrix and a visited[] array</li>
+                        </ul>
+                    </div>
+
+                    <div class="key-formula">
+                        <h4>⭐ Most Important Line — The Recursive Call</h4>
+                        <p>
+                            <code>if (graph[v][i] == 1 &amp;&amp; visited[i] == 0)</code> → <code>DFS(i, n);</code><br>
+                            This is the heart of DFS: visit every connected, unvisited neighbour.
+                        </p>
+                    </div>
+
+                    <div class="algo-steps">
+                        <h3>📋 Algorithm Steps</h3>
+                        <ol>
+                            <li>Print/visit the current vertex v</li>
+                            <li>Mark visited[v] = 1</li>
+                            <li>For each vertex i from 0 to n-1:</li>
+                            <li>If graph[v][i] == 1 (connected) AND visited[i] == 0 (unvisited) → DFS(i, n)</li>
+                            <li>Backtrack when no unvisited neighbours remain</li>
+                        </ol>
+                    </div>
+
+                    <div class="code-section">
+                        <div class="code-section-label">
+                            <h3>💻 Complete Code</h3>
+                            <button class="copy-btn" onclick="copyCode(this)">📋 Copy</button>
+                        </div>
+                        <div class="code-block">
+                            <div class="code-block-header">
+                                <div class="code-dot red"></div>
+                                <div class="code-dot yellow"></div>
+                                <div class="code-dot green"></div>
+                                <span class="code-block-filename">dfs.c</span>
+                            </div>
+<pre><code><span class="pp">#include</span> <span class="st">&lt;stdio.h&gt;</span>
+
+<span class="pp">#define</span> <span class="nm">MAX</span> <span class="nm">100</span>
+
+<span class="cm">/* ─── Global arrays ──────────────────────────────────────
+   graph[][] = adjacency matrix (1 = edge exists)
+   visited[] = tracks which vertices have been visited
+   ────────────────────────────────────────────────────────── */</span>
+<span class="tp">int</span> graph[<span class="nm">MAX</span>][<span class="nm">MAX</span>];
+<span class="tp">int</span> visited[<span class="nm">MAX</span>];
+
+<span class="cm">/* ─── DFS() ──────────────────────────────────────────────
+   Recursive Depth First Search.
+   v = current vertex, n = total number of vertices
+   ────────────────────────────────────────────────────────── */</span>
+<span class="tp">void</span> <span class="fn">DFS</span>(<span class="tp">int</span> v, <span class="tp">int</span> n) {
+
+    <span class="fn">printf</span>(<span class="st">"%d "</span>, v);       <span class="cm">/* Step 1: Visit (print) the vertex */</span>
+    visited[v] = <span class="nm">1</span>;          <span class="cm">/* Step 2: Mark it as visited */</span>
+
+    <span class="cm">/* Step 3: Check ALL vertices to find neighbours */</span>
+    <span class="kw">for</span> (<span class="tp">int</span> i = <span class="nm">0</span>; i &lt; n; i++) {
+
+        <span class="cm">/* If there's an edge (connected) AND not yet visited */</span>
+        <span class="kw">if</span> (graph[v][i] == <span class="nm">1</span> &amp;&amp; visited[i] == <span class="nm">0</span>) {
+            <span class="fn">DFS</span>(i, n);       <span class="cm">/* ⭐ Recurse into the unvisited neighbour */</span>
+        }
+    }
+}
+
+<span class="tp">int</span> <span class="fn">main</span>() {
+    <span class="tp">int</span> n;
+    <span class="tp">int</span> start;
+
+    <span class="fn">printf</span>(<span class="st">"Enter number of vertices: "</span>);
+    <span class="fn">scanf</span>(<span class="st">"%d"</span>, &amp;n);
+
+    <span class="fn">printf</span>(<span class="st">"Enter adjacency matrix:\n"</span>);
+
+    <span class="kw">for</span> (<span class="tp">int</span> i = <span class="nm">0</span>; i &lt; n; i++) {
+        <span class="kw">for</span> (<span class="tp">int</span> j = <span class="nm">0</span>; j &lt; n; j++) {
+            <span class="fn">scanf</span>(<span class="st">"%d"</span>, &amp;graph[i][j]);
+        }
+    }
+
+    <span class="cm">/* Initialize all vertices as unvisited */</span>
+    <span class="kw">for</span> (<span class="tp">int</span> i = <span class="nm">0</span>; i &lt; n; i++) {
+        visited[i] = <span class="nm">0</span>;
+    }
+
+    <span class="fn">printf</span>(<span class="st">"Enter starting vertex: "</span>);
+    <span class="fn">scanf</span>(<span class="st">"%d"</span>, &amp;start);
+
+    <span class="fn">printf</span>(<span class="st">"DFS Traversal: "</span>);
+    <span class="fn">DFS</span>(start, n);
+
+    <span class="kw">return</span> <span class="nm">0</span>;
+}</code></pre>
+                        </div>
+                    </div>
+
+                    <div class="example-output">
+                        <h4>▶ Example Output</h4>
+<pre>Enter number of vertices: 5
+Enter adjacency matrix:
+0 1 1 0 0
+1 0 0 1 0
+1 0 0 1 1
+0 1 1 0 1
+0 0 1 1 0
+
+Enter starting vertex: 0
+DFS Traversal: 0 1 3 2 4</pre>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+             6. DIJKSTRA'S ALGORITHM
+             ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+        <div class="algo-card" id="dijkstra" data-category="graph" data-name="Dijkstra Shortest Path">
+            <div class="algo-header" onclick="toggleCard(this)">
+                <div class="algo-header-left">
+                    <div class="algo-number graph">6</div>
+                    <div class="algo-title">Dijkstra's Algorithm</div>
+                </div>
+                <div class="algo-tags">
+                    <span class="algo-tag graph">Graph</span>
+                    <span class="algo-tag tc">O(V²)</span>
+                </div>
+                <div class="algo-toggle">▼</div>
+            </div>
+            <div class="algo-body">
+                <div class="algo-body-inner">
+
+                    <div class="concept-box">
+                        <h3>🧠 Core Concept</h3>
+                        <p>Finds the <strong>shortest path from one source vertex</strong> to every other vertex in a weighted graph. Works only with <strong>non-negative edge weights</strong>.</p>
+                        <ul>
+                            <li>Memory trick: <strong>DISTANCE → MINIMUM → FIX → RELAX</strong></li>
+                            <li>Start all distances = ∞, source distance = 0</li>
+                            <li>Repeatedly pick the unvisited vertex with minimum distance</li>
+                            <li>Relax all its neighbours (update shorter paths)</li>
+                        </ul>
+                    </div>
+
+                    <div class="key-formula">
+                        <h4>⭐ Relaxation — Most Important Line</h4>
+                        <p>
+                            <code>if (dist[u] + graph[u][v] &lt; dist[v])</code><br>
+                            <code>&nbsp;&nbsp;&nbsp;&nbsp;dist[v] = dist[u] + graph[u][v];</code>
+                        </p>
+                    </div>
+
+                    <div class="algo-steps">
+                        <h3>📋 Algorithm Steps</h3>
+                        <ol>
+                            <li>Set all distances = INT_MAX (infinity)</li>
+                            <li>Set source distance = 0</li>
+                            <li>Find the unvisited vertex u with minimum distance</li>
+                            <li>Mark u as visited</li>
+                            <li>For every neighbour v of u: if dist[u] + weight(u,v) &lt; dist[v], update dist[v]</li>
+                            <li>Repeat V-1 times</li>
+                        </ol>
+                    </div>
+
+                    <div class="code-section">
+                        <div class="code-section-label">
+                            <h3>💻 Complete Code</h3>
+                            <button class="copy-btn" onclick="copyCode(this)">📋 Copy</button>
+                        </div>
+                        <div class="code-block">
+                            <div class="code-block-header">
+                                <div class="code-dot red"></div>
+                                <div class="code-dot yellow"></div>
+                                <div class="code-dot green"></div>
+                                <span class="code-block-filename">dijistra.c</span>
+                            </div>
+<pre><code><span class="pp">#include</span> <span class="st">&lt;stdio.h&gt;</span>
+<span class="pp">#include</span> <span class="st">&lt;limits.h&gt;</span>
+
+<span class="pp">#define</span> <span class="nm">V</span> <span class="nm">5</span>   <span class="cm">/* Number of vertices in the graph */</span>
+
+<span class="cm">/* ─── minDistance() ──────────────────────────────────────
+   Finds the unvisited vertex with the smallest distance value.
+   Returns the index of that vertex.
+   ────────────────────────────────────────────────────────── */</span>
+<span class="tp">int</span> <span class="fn">minDistance</span>(<span class="tp">int</span> dist[], <span class="tp">int</span> visited[]) {
+
+    <span class="tp">int</span> min = INT_MAX;    <span class="cm">/* Start with infinity */</span>
+    <span class="tp">int</span> index = -<span class="nm">1</span>;
+
+    <span class="kw">for</span> (<span class="tp">int</span> i = <span class="nm">0</span>; i &lt; V; i++) {
+
+        <span class="cm">/* If not visited and distance is smaller than current min */</span>
+        <span class="kw">if</span> (!visited[i] &amp;&amp; dist[i] &lt; min) {
+            min = dist[i];
+            index = i;
+        }
+    }
+
+    <span class="kw">return</span> index;
+}
+
+<span class="cm">/* ─── dijkstra() ─────────────────────────────────────────
+   Computes shortest distances from 'source' to all vertices.
+   Uses adjacency matrix representation.
+   ────────────────────────────────────────────────────────── */</span>
+<span class="tp">void</span> <span class="fn">dijkstra</span>(<span class="tp">int</span> graph[V][V], <span class="tp">int</span> source) {
+
+    <span class="tp">int</span> dist[V];            <span class="cm">/* dist[i] = shortest distance from source to i */</span>
+    <span class="tp">int</span> visited[V];          <span class="cm">/* visited[i] = 1 if vertex i is finalized */</span>
+
+    <span class="cm">/* Initialize: all distances = infinity, all unvisited */</span>
+    <span class="kw">for</span> (<span class="tp">int</span> i = <span class="nm">0</span>; i &lt; V; i++) {
+        dist[i] = INT_MAX;
+        visited[i] = <span class="nm">0</span>;
+    }
+
+    dist[source] = <span class="nm">0</span>;        <span class="cm">/* Distance from source to itself is 0 */</span>
+
+    <span class="cm">/* Process V-1 vertices */</span>
+    <span class="kw">for</span> (<span class="tp">int</span> count = <span class="nm">0</span>; count &lt; V - <span class="nm">1</span>; count++) {
+
+        <span class="tp">int</span> u = <span class="fn">minDistance</span>(dist, visited); <span class="cm">/* Pick min distance vertex */</span>
+
+        visited[u] = <span class="nm">1</span>;                      <span class="cm">/* Mark it as finalized */</span>
+
+        <span class="cm">/* ⭐ RELAXATION: Update distances of all neighbours of u */</span>
+        <span class="kw">for</span> (<span class="tp">int</span> v = <span class="nm">0</span>; v &lt; V; v++) {
+
+            <span class="kw">if</span> (!visited[v] &amp;&amp;                <span class="cm">/* Not yet finalized */</span>
+                graph[u][v] &amp;&amp;                  <span class="cm">/* Edge exists */</span>
+                dist[u] != INT_MAX &amp;&amp;            <span class="cm">/* u is reachable */</span>
+                dist[u] + graph[u][v] &lt; dist[v]) <span class="cm">/* Shorter path found */</span>
+            {
+                dist[v] = dist[u] + graph[u][v]; <span class="cm">/* Update distance */</span>
+            }
+        }
+    }
+
+    <span class="cm">/* Print shortest distances */</span>
+    <span class="fn">printf</span>(<span class="st">"Vertex\tDistance\n"</span>);
+
+    <span class="kw">for</span> (<span class="tp">int</span> i = <span class="nm">0</span>; i &lt; V; i++)
+        <span class="fn">printf</span>(<span class="st">"%d\t%d\n"</span>, i, dist[i]);
+}
+
+<span class="tp">int</span> <span class="fn">main</span>() {
+
+    <span class="cm">/* Adjacency matrix (0 = no edge) */</span>
+    <span class="tp">int</span> graph[V][V] = {
+        {<span class="nm">0</span>, <span class="nm">10</span>, <span class="nm">0</span>, <span class="nm">5</span>, <span class="nm">0</span>},
+        {<span class="nm">10</span>, <span class="nm">0</span>, <span class="nm">1</span>, <span class="nm">2</span>, <span class="nm">0</span>},
+        {<span class="nm">0</span>, <span class="nm">1</span>, <span class="nm">0</span>, <span class="nm">9</span>, <span class="nm">4</span>},
+        {<span class="nm">5</span>, <span class="nm">2</span>, <span class="nm">9</span>, <span class="nm">0</span>, <span class="nm">2</span>},
+        {<span class="nm">0</span>, <span class="nm">0</span>, <span class="nm">4</span>, <span class="nm">2</span>, <span class="nm">0</span>}
+    };
+
+    <span class="fn">dijkstra</span>(graph, <span class="nm">0</span>);  <span class="cm">/* Run Dijkstra from vertex 0 */</span>
+
+    <span class="kw">return</span> <span class="nm">0</span>;
+}</code></pre>
+                        </div>
+                    </div>
+
+                    <div class="example-output">
+                        <h4>▶ Example Output</h4>
+<pre>Vertex  Distance
+0       0
+1       7
+2       8
+3       5
+4       7</pre>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+             7. KRUSKAL'S MST
+             ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+        <div class="algo-card" id="kruskal" data-category="graph" data-name="Kruskal Minimum Spanning Tree MST">
+            <div class="algo-header" onclick="toggleCard(this)">
+                <div class="algo-header-left">
+                    <div class="algo-number graph">7</div>
+                    <div class="algo-title">Kruskal's MST (Min Cost Spanning Tree)</div>
+                </div>
+                <div class="algo-tags">
+                    <span class="algo-tag graph">Graph</span>
+                    <span class="algo-tag tc">O(E log E)</span>
+                </div>
+                <div class="algo-toggle">▼</div>
+            </div>
+            <div class="algo-body">
+                <div class="algo-body-inner">
+
+                    <div class="concept-box">
+                        <h3>🧠 Core Concept</h3>
+                        <p>Kruskal's algorithm builds a <strong>Minimum Spanning Tree</strong> by greedily picking the smallest edges, as long as they don't create a cycle.</p>
+                        <ul>
+                            <li>Memory trick: <strong>SORT → PICK → CHECK CYCLE</strong></li>
+                            <li>Uses <strong>Union-Find (Disjoint Set)</strong> data structure to detect cycles</li>
+                            <li>Stop when V-1 edges are selected</li>
+                        </ul>
+                    </div>
+
+                    <div class="key-formula">
+                        <h4>⭐ Key Logic — Union-Find Cycle Check</h4>
+                        <p>
+                            <code>if (find(parent, u) != find(parent, v))</code> → no cycle, include edge<br>
+                            <code>union(parent, u, v)</code> → merge the two sets
+                        </p>
+                    </div>
+
+                    <div class="algo-steps">
+                        <h3>📋 Algorithm Steps</h3>
+                        <ol>
+                            <li>Sort all edges by weight (ascending)</li>
+                            <li>Initialize parent[] — each vertex is its own parent</li>
+                            <li>Pick the smallest edge</li>
+                            <li>If find(u) ≠ find(v) → no cycle → include edge, union(u, v)</li>
+                            <li>Repeat until V-1 edges are added</li>
+                        </ol>
+                    </div>
+
+                    <div class="code-section">
+                        <div class="code-section-label">
+                            <h3>💻 Complete Code</h3>
+                            <button class="copy-btn" onclick="copyCode(this)">📋 Copy</button>
+                        </div>
+                        <div class="code-block">
+                            <div class="code-block-header">
+                                <div class="code-dot red"></div>
+                                <div class="code-dot yellow"></div>
+                                <div class="code-dot green"></div>
+                                <span class="code-block-filename">mincostspan.c</span>
+                            </div>
+<pre><code><span class="pp">#include</span> <span class="st">&lt;stdio.h&gt;</span>
+
+<span class="cm">/* Edge structure: stores source, destination, and weight */</span>
+<span class="kw">struct</span> <span class="tp">Edge</span> {
+    <span class="tp">int</span> u, v, weight;
+};
+
+<span class="cm">/* ─── find() ─────────────────────────────────────────────
+   Find the root of the set that x belongs to.
+   Uses PATH COMPRESSION: makes every node point directly
+   to the root, flattening the tree for future lookups.
+   ────────────────────────────────────────────────────────── */</span>
+<span class="tp">int</span> <span class="fn">find</span>(<span class="tp">int</span> parent[], <span class="tp">int</span> x) {
+    <span class="kw">if</span> (parent[x] != x)
+        parent[x] = <span class="fn">find</span>(parent, parent[x]);  <span class="cm">/* Path compression */</span>
+
+    <span class="kw">return</span> parent[x];
+}
+
+<span class="cm">/* ─── unionSet() ─────────────────────────────────────────
+   Union by Rank: attach the shorter tree under the taller tree.
+   This keeps the tree flat and find() efficient.
+   ────────────────────────────────────────────────────────── */</span>
+<span class="tp">void</span> <span class="fn">unionSet</span>(<span class="tp">int</span> parent[], <span class="tp">int</span> rank[], <span class="tp">int</span> x, <span class="tp">int</span> y) {
+
+    <span class="tp">int</span> rootX = <span class="fn">find</span>(parent, x);
+    <span class="tp">int</span> rootY = <span class="fn">find</span>(parent, y);
+
+    <span class="kw">if</span> (rootX != rootY) {
+
+        <span class="cm">/* Attach smaller-rank tree under larger-rank tree */</span>
+        <span class="kw">if</span> (rank[rootX] &lt; rank[rootY])
+            parent[rootX] = rootY;
+
+        <span class="kw">else if</span> (rank[rootX] &gt; rank[rootY])
+            parent[rootY] = rootX;
+
+        <span class="kw">else</span> {
+            parent[rootY] = rootX;
+            rank[rootX]++;            <span class="cm">/* Increase rank when equal */</span>
+        }
+    }
+}
+
+<span class="tp">int</span> <span class="fn">main</span>() {
+
+    <span class="tp">int</span> V, E;
+
+    <span class="fn">printf</span>(<span class="st">"Enter vertices and edges: "</span>);
+    <span class="fn">scanf</span>(<span class="st">"%d %d"</span>, &amp;V, &amp;E);
+
+    <span class="kw">struct</span> <span class="tp">Edge</span> edges[E];
+
+    <span class="kw">for</span> (<span class="tp">int</span> i = <span class="nm">0</span>; i &lt; E; i++) {
+        <span class="fn">printf</span>(<span class="st">"Enter u v weight: "</span>);
+        <span class="fn">scanf</span>(<span class="st">"%d %d %d"</span>,
+              &amp;edges[i].u,
+              &amp;edges[i].v,
+              &amp;edges[i].weight);
+    }
+
+    <span class="cm">/* Step 1: Sort edges by weight (ascending) — using bubble sort */</span>
+    <span class="kw">for</span> (<span class="tp">int</span> i = <span class="nm">0</span>; i &lt; E - <span class="nm">1</span>; i++) {
+        <span class="kw">for</span> (<span class="tp">int</span> j = i + <span class="nm">1</span>; j &lt; E; j++) {
+
+            <span class="kw">if</span> (edges[i].weight &gt; edges[j].weight) {
+                <span class="kw">struct</span> <span class="tp">Edge</span> temp = edges[i];
+                edges[i] = edges[j];
+                edges[j] = temp;
+            }
+        }
+    }
+
+    <span class="cm">/* Initialize Union-Find: each vertex is its own parent */</span>
+    <span class="tp">int</span> parent[V];
+    <span class="tp">int</span> rank[V];
+
+    <span class="kw">for</span> (<span class="tp">int</span> i = <span class="nm">0</span>; i &lt; V; i++) {
+        parent[i] = i;     <span class="cm">/* Each node is its own root */</span>
+        rank[i] = <span class="nm">0</span>;       <span class="cm">/* Rank starts at 0 */</span>
+    }
+
+    <span class="tp">int</span> count = <span class="nm">0</span>;     <span class="cm">/* Number of edges in MST */</span>
+    <span class="tp">int</span> cost = <span class="nm">0</span>;      <span class="cm">/* Total cost of MST */</span>
+
+    <span class="fn">printf</span>(<span class="st">"Edges in MST:\n"</span>);
+
+    <span class="cm">/* Step 2: Pick edges in order, include if no cycle */</span>
+    <span class="kw">for</span> (<span class="tp">int</span> i = <span class="nm">0</span>; i &lt; E &amp;&amp; count &lt; V - <span class="nm">1</span>; i++) {
+
+        <span class="tp">int</span> u = edges[i].u;
+        <span class="tp">int</span> v = edges[i].v;
+
+        <span class="cm">/* ⭐ If u and v are in different sets → no cycle */</span>
+        <span class="kw">if</span> (<span class="fn">find</span>(parent, u) != <span class="fn">find</span>(parent, v)) {
+
+            <span class="fn">printf</span>(<span class="st">"%d -- %d = %d\n"</span>,
+                   u, v, edges[i].weight);
+
+            cost += edges[i].weight;
+
+            <span class="fn">unionSet</span>(parent, rank, u, v);  <span class="cm">/* Merge the two sets */</span>
+
+            count++;
+        }
+    }
+
+    <span class="fn">printf</span>(<span class="st">"Minimum cost = %d\n"</span>, cost);
+
+    <span class="kw">return</span> <span class="nm">0</span>;
+}</code></pre>
+                        </div>
+                    </div>
+
+                    <div class="example-output">
+                        <h4>▶ Example Output</h4>
+<pre>Enter vertices and edges: 4 5
+0 1 10
+0 2 6
+0 3 5
+1 3 15
+2 3 4
+
+Edges in MST:
+2 -- 3 = 4
+0 -- 3 = 5
+0 -- 1 = 10
+
+Minimum cost = 19</pre>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+             8. ACTIVITY SELECTION
+             ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+        <div class="algo-card" id="activity" data-category="greedy" data-name="Activity Selection">
+            <div class="algo-header" onclick="toggleCard(this)">
+                <div class="algo-header-left">
+                    <div class="algo-number greedy">8</div>
+                    <div class="algo-title">Activity Selection</div>
+                </div>
+                <div class="algo-tags">
+                    <span class="algo-tag greedy">Greedy</span>
+                    <span class="algo-tag tc">O(n log n)</span>
+                </div>
+                <div class="algo-toggle">▼</div>
+            </div>
+            <div class="algo-body">
+                <div class="algo-body-inner">
+
+                    <div class="concept-box">
+                        <h3>🧠 Core Concept</h3>
+                        <p>Select the <strong>maximum number of non-overlapping activities</strong>. Greedy rule: always pick the activity that <strong>finishes earliest</strong>.</p>
+                        <ul>
+                            <li>Each activity has a start time and finish time</li>
+                            <li>Sort by finish time (ascending)</li>
+                            <li>Select first activity, then for each remaining: if start ≥ last_finish → select it</li>
+                        </ul>
+                    </div>
+
+                    <div class="key-formula">
+                        <h4>⭐ Most Important Line</h4>
+                        <p>
+                            <code>if (activities[i].start &gt;= lastFinish)</code> → select this activity
+                        </p>
+                    </div>
+
+                    <div class="algo-steps">
+                        <h3>📋 Algorithm Steps</h3>
+                        <ol>
+                            <li>Sort activities by finish time</li>
+                            <li>Select the first activity (earliest finish)</li>
+                            <li>For each remaining activity: if its start ≥ last selected finish → include it</li>
+                            <li>Update lastFinish to the newly selected activity's finish time</li>
+                        </ol>
+                    </div>
+
+                    <div class="code-section">
+                        <div class="code-section-label">
+                            <h3>💻 Complete Code</h3>
+                            <button class="copy-btn" onclick="copyCode(this)">📋 Copy</button>
+                        </div>
+                        <div class="code-block">
+                            <div class="code-block-header">
+                                <div class="code-dot red"></div>
+                                <div class="code-dot yellow"></div>
+                                <div class="code-dot green"></div>
+                                <span class="code-block-filename">activity.c</span>
+                            </div>
+<pre><code><span class="pp">#include</span> <span class="st">&lt;stdio.h&gt;</span>
+
+<span class="cm">/* Activity structure: holds start and finish times */</span>
+<span class="kw">struct</span> <span class="tp">Activity</span> {
+    <span class="tp">int</span> start;
+    <span class="tp">int</span> finish;
+};
+
+<span class="tp">int</span> <span class="fn">main</span>() {
+    <span class="tp">int</span> n;
+
+    <span class="fn">printf</span>(<span class="st">"Enter number of activities: "</span>);
+    <span class="fn">scanf</span>(<span class="st">"%d"</span>, &amp;n);
+
+    <span class="kw">struct</span> <span class="tp">Activity</span> a[n];
+
+    <span class="kw">for</span> (<span class="tp">int</span> i = <span class="nm">0</span>; i &lt; n; i++) {
+        <span class="fn">printf</span>(<span class="st">"Enter start and finish: "</span>);
+        <span class="fn">scanf</span>(<span class="st">"%d %d"</span>, &amp;a[i].start, &amp;a[i].finish);
+    }
+
+    <span class="cm">/* Step 1: Sort activities by finish time (ascending)
+       Using selection sort for simplicity */</span>
+    <span class="kw">for</span> (<span class="tp">int</span> i = <span class="nm">0</span>; i &lt; n - <span class="nm">1</span>; i++) {
+        <span class="kw">for</span> (<span class="tp">int</span> j = i + <span class="nm">1</span>; j &lt; n; j++) {
+
+            <span class="kw">if</span> (a[i].finish &gt; a[j].finish) {
+                <span class="kw">struct</span> <span class="tp">Activity</span> temp = a[i];
+                a[i] = a[j];
+                a[j] = temp;
+            }
+        }
+    }
+
+    <span class="fn">printf</span>(<span class="st">"Selected activities:\n"</span>);
+
+    <span class="tp">int</span> lastFinish = -<span class="nm">1</span>;  <span class="cm">/* Track last selected activity's finish time */</span>
+
+    <span class="cm">/* Step 2: Greedily select non-overlapping activities */</span>
+    <span class="kw">for</span> (<span class="tp">int</span> i = <span class="nm">0</span>; i &lt; n; i++) {
+
+        <span class="cm">/* ⭐ If this activity starts after the last selected one finishes */</span>
+        <span class="kw">if</span> (a[i].start &gt;= lastFinish) {
+            <span class="fn">printf</span>(<span class="st">"(%d, %d)\n"</span>,
+                   a[i].start,
+                   a[i].finish);
+
+            lastFinish = a[i].finish;  <span class="cm">/* Update last finish time */</span>
+        }
+    }
+
+    <span class="kw">return</span> <span class="nm">0</span>;
+}</code></pre>
+                        </div>
+                    </div>
+
+                    <div class="example-output">
+                        <h4>▶ Example Output</h4>
+<pre>Enter number of activities: 6
+1 2
+3 4
+0 6
+5 7
+8 9
+5 9
+
+Selected activities:
+(1, 2)
+(3, 4)
+(5, 7)
+(8, 9)</pre>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+             9. FRACTIONAL KNAPSACK
+             ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+        <div class="algo-card" id="fractional-knapsack" data-category="greedy" data-name="Fractional Knapsack">
+            <div class="algo-header" onclick="toggleCard(this)">
+                <div class="algo-header-left">
+                    <div class="algo-number greedy">9</div>
+                    <div class="algo-title">Fractional Knapsack</div>
+                </div>
+                <div class="algo-tags">
+                    <span class="algo-tag greedy">Greedy</span>
+                    <span class="algo-tag tc">O(n log n)</span>
+                </div>
+                <div class="algo-toggle">▼</div>
+            </div>
+            <div class="algo-body">
+                <div class="algo-body-inner">
+
+                    <div class="concept-box">
+                        <h3>🧠 Core Concept</h3>
+                        <p>Unlike 0/1 Knapsack, you <strong>can take a fraction</strong> of an item. So calculate the <strong>value/weight ratio</strong> and sort by it.</p>
+                        <ul>
+                            <li>Calculate ratio = value / weight for each item</li>
+                            <li>Sort items by decreasing ratio</li>
+                            <li>Take whole items if they fit, otherwise take the fraction that fits</li>
+                        </ul>
+                    </div>
+
+                    <div class="key-formula">
+                        <h4>⭐ Key Decision Logic</h4>
+                        <p>
+                            <code>if (weight[i] &lt;= capacity)</code> → take whole item<br>
+                            <code>else { total += ratio[i] * capacity; break; }</code> → take fraction, stop
+                        </p>
+                    </div>
+
+                    <div class="algo-steps">
+                        <h3>📋 Algorithm Steps</h3>
+                        <ol>
+                            <li>Calculate value/weight ratio for each item</li>
+                            <li>Sort items by decreasing ratio</li>
+                            <li>For each item: if whole item fits → take it; else take remaining fraction and stop</li>
+                        </ol>
+                    </div>
+
+                    <div class="code-section">
+                        <div class="code-section-label">
+                            <h3>💻 Complete Code</h3>
+                            <button class="copy-btn" onclick="copyCode(this)">📋 Copy</button>
+                        </div>
+                        <div class="code-block">
+                            <div class="code-block-header">
+                                <div class="code-dot red"></div>
+                                <div class="code-dot yellow"></div>
+                                <div class="code-dot green"></div>
+                                <span class="code-block-filename">fractionalknap.c</span>
+                            </div>
+<pre><code><span class="pp">#include</span> <span class="st">&lt;stdio.h&gt;</span>
+
+<span class="cm">/* Item structure: weight, value, and computed ratio */</span>
+<span class="kw">struct</span> <span class="tp">Item</span> {
+    <span class="tp">int</span> weight;
+    <span class="tp">int</span> value;
+    <span class="tp">float</span> ratio;   <span class="cm">/* value / weight — higher is better */</span>
+};
+
+<span class="tp">int</span> <span class="fn">main</span>() {
+    <span class="tp">int</span> n, capacity;
+
+    <span class="fn">printf</span>(<span class="st">"Enter number of items: "</span>);
+    <span class="fn">scanf</span>(<span class="st">"%d"</span>, &amp;n);
+
+    <span class="kw">struct</span> <span class="tp">Item</span> item[n];
+
+    <span class="kw">for</span> (<span class="tp">int</span> i = <span class="nm">0</span>; i &lt; n; i++) {
+        <span class="fn">printf</span>(<span class="st">"Enter weight and value: "</span>);
+        <span class="fn">scanf</span>(<span class="st">"%d %d"</span>, &amp;item[i].weight, &amp;item[i].value);
+
+        <span class="cm">/* Calculate value-to-weight ratio */</span>
+        item[i].ratio =
+            (<span class="tp">float</span>)item[i].value / item[i].weight;
+    }
+
+    <span class="fn">printf</span>(<span class="st">"Enter capacity: "</span>);
+    <span class="fn">scanf</span>(<span class="st">"%d"</span>, &amp;capacity);
+
+    <span class="cm">/* Step 1: Sort items by DECREASING ratio (best value per weight first) */</span>
+    <span class="kw">for</span> (<span class="tp">int</span> i = <span class="nm">0</span>; i &lt; n - <span class="nm">1</span>; i++) {
+        <span class="kw">for</span> (<span class="tp">int</span> j = i + <span class="nm">1</span>; j &lt; n; j++) {
+
+            <span class="kw">if</span> (item[i].ratio &lt; item[j].ratio) {
+                <span class="kw">struct</span> <span class="tp">Item</span> temp = item[i];
+                item[i] = item[j];
+                item[j] = temp;
+            }
+        }
+    }
+
+    <span class="tp">float</span> total = <span class="nm">0</span>;  <span class="cm">/* Total value collected */</span>
+
+    <span class="cm">/* Step 2: Greedily take items (whole or fraction) */</span>
+    <span class="kw">for</span> (<span class="tp">int</span> i = <span class="nm">0</span>; i &lt; n; i++) {
+
+        <span class="cm">/* If the whole item fits in remaining capacity */</span>
+        <span class="kw">if</span> (item[i].weight &lt;= capacity) {
+            total += item[i].value;        <span class="cm">/* Take whole item */</span>
+            capacity -= item[i].weight;     <span class="cm">/* Reduce capacity */</span>
+        }
+        <span class="kw">else</span> {
+            <span class="cm">/* ⭐ Take only the fraction that fits */</span>
+            total += item[i].ratio * capacity;
+            <span class="kw">break</span>;   <span class="cm">/* Bag is full, stop */</span>
+        }
+    }
+
+    <span class="fn">printf</span>(<span class="st">"Maximum value = %.2f\n"</span>, total);
+
+    <span class="kw">return</span> <span class="nm">0</span>;
+}</code></pre>
+                        </div>
+                    </div>
+
+                    <div class="example-output">
+                        <h4>▶ Example Output</h4>
+<pre>Enter number of items: 3
+Enter weight and value: 10 60
+Enter weight and value: 20 100
+Enter weight and value: 30 120
+Enter capacity: 50
+
+Maximum value = 240.00</pre>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+             10. 0/1 KNAPSACK
+             ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+        <div class="algo-card" id="01-knapsack" data-category="dp" data-name="0/1 Knapsack Dynamic Programming">
+            <div class="algo-header" onclick="toggleCard(this)">
+                <div class="algo-header-left">
+                    <div class="algo-number dp">10</div>
+                    <div class="algo-title">0/1 Knapsack</div>
+                </div>
+                <div class="algo-tags">
+                    <span class="algo-tag dp">Dynamic Programming</span>
+                    <span class="algo-tag tc">O(n×W)</span>
+                </div>
+                <div class="algo-toggle">▼</div>
+            </div>
+            <div class="algo-body">
+                <div class="algo-body-inner">
+
+                    <div class="concept-box">
+                        <h3>🧠 Core Concept</h3>
+                        <p>You have items with weight and value, and a bag with capacity W. For every item, you can <strong>take it (1) or leave it (0)</strong> — no fractions allowed.</p>
+                        <ul>
+                            <li><strong>dp[i][w]</strong> = maximum value using first i items with capacity w</li>
+                            <li>Don't take → dp[i-1][w]</li>
+                            <li>Take → value[i-1] + dp[i-1][w - weight[i-1]]</li>
+                            <li>Answer = dp[n][W]</li>
+                        </ul>
+                    </div>
+
+                    <div class="key-formula">
+                        <h4>⭐ The DP Recurrence — Remember This!</h4>
+                        <p>
+                            <code>if (weight[i-1] &lt;= w)</code><br>
+                            <code>&nbsp;&nbsp;dp[i][w] = max(dp[i-1][w], value[i-1] + dp[i-1][w-weight[i-1]])</code><br>
+                            <code>else</code><br>
+                            <code>&nbsp;&nbsp;dp[i][w] = dp[i-1][w]</code>
+                        </p>
+                    </div>
+
+                    <div class="algo-steps">
+                        <h3>📋 Algorithm Steps</h3>
+                        <ol>
+                            <li>Create dp[n+1][W+1] table</li>
+                            <li>Set dp[0][w] = 0 and dp[i][0] = 0 (base cases)</li>
+                            <li>For each item i, for each capacity w:</li>
+                            <li>If weight[i-1] ≤ w → dp[i][w] = max(skip, take)</li>
+                            <li>Else → dp[i][w] = dp[i-1][w] (can't take it)</li>
+                            <li>Answer is dp[n][W]</li>
+                        </ol>
+                    </div>
+
+                    <div class="code-section">
+                        <div class="code-section-label">
+                            <h3>💻 Complete Code</h3>
+                            <button class="copy-btn" onclick="copyCode(this)">📋 Copy</button>
+                        </div>
+                        <div class="code-block">
+                            <div class="code-block-header">
+                                <div class="code-dot red"></div>
+                                <div class="code-dot yellow"></div>
+                                <div class="code-dot green"></div>
+                                <span class="code-block-filename">01knapsac.c</span>
+                            </div>
+<pre><code><span class="pp">#include</span> <span class="st">&lt;stdio.h&gt;</span>
+
+<span class="cm">/* Returns the maximum of two integers */</span>
+<span class="tp">int</span> <span class="fn">max</span>(<span class="tp">int</span> a, <span class="tp">int</span> b) {
+    <span class="kw">return</span> a &gt; b ? a : b;
+}
+
+<span class="tp">int</span> <span class="fn">main</span>() {
+    <span class="tp">int</span> n, W;
+
+    <span class="fn">printf</span>(<span class="st">"Enter number of items: "</span>);
+    <span class="fn">scanf</span>(<span class="st">"%d"</span>, &amp;n);
+
+    <span class="tp">int</span> weight[n], value[n];
+
+    <span class="fn">printf</span>(<span class="st">"Enter weights:\n"</span>);
+    <span class="kw">for</span> (<span class="tp">int</span> i = <span class="nm">0</span>; i &lt; n; i++)
+        <span class="fn">scanf</span>(<span class="st">"%d"</span>, &amp;weight[i]);
+
+    <span class="fn">printf</span>(<span class="st">"Enter values:\n"</span>);
+    <span class="kw">for</span> (<span class="tp">int</span> i = <span class="nm">0</span>; i &lt; n; i++)
+        <span class="fn">scanf</span>(<span class="st">"%d"</span>, &amp;value[i]);
+
+    <span class="fn">printf</span>(<span class="st">"Enter capacity: "</span>);
+    <span class="fn">scanf</span>(<span class="st">"%d"</span>, &amp;W);
+
+    <span class="cm">/* dp[i][w] = max value using first i items with capacity w */</span>
+    <span class="tp">int</span> dp[n + <span class="nm">1</span>][W + <span class="nm">1</span>];
+
+    <span class="cm">/* Fill the DP table bottom-up */</span>
+    <span class="kw">for</span> (<span class="tp">int</span> i = <span class="nm">0</span>; i &lt;= n; i++) {
+        <span class="kw">for</span> (<span class="tp">int</span> w = <span class="nm">0</span>; w &lt;= W; w++) {
+
+            <span class="cm">/* Base case: no items or no capacity → value is 0 */</span>
+            <span class="kw">if</span> (i == <span class="nm">0</span> || w == <span class="nm">0</span>)
+                dp[i][w] = <span class="nm">0</span>;
+
+            <span class="cm">/* ⭐ If item fits: choose max of (skip it, take it) */</span>
+            <span class="kw">else if</span> (weight[i - <span class="nm">1</span>] &lt;= w)
+                dp[i][w] = <span class="fn">max</span>(dp[i - <span class="nm">1</span>][w],
+                               value[i - <span class="nm">1</span>] +
+                               dp[i - <span class="nm">1</span>][w - weight[i - <span class="nm">1</span>]]);
+
+            <span class="cm">/* Item too heavy: skip it */</span>
+            <span class="kw">else</span>
+                dp[i][w] = dp[i - <span class="nm">1</span>][w];
+        }
+    }
+
+    <span class="fn">printf</span>(<span class="st">"Maximum value = %d\n"</span>, dp[n][W]);
+
+    <span class="kw">return</span> <span class="nm">0</span>;
+}</code></pre>
+                        </div>
+                    </div>
+
+                    <div class="example-output">
+                        <h4>▶ Example Output</h4>
+<pre>Enter number of items: 3
+Enter weights:
+10 20 30
+Enter values:
+60 100 120
+Enter capacity: 50
+
+Maximum value = 220</pre>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+             11. ROD CUTTING
+             ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+        <div class="algo-card" id="rod-cutting" data-category="dp" data-name="Rod Cutting">
+            <div class="algo-header" onclick="toggleCard(this)">
+                <div class="algo-header-left">
+                    <div class="algo-number dp">11</div>
+                    <div class="algo-title">Rod Cutting</div>
+                </div>
+                <div class="algo-tags">
+                    <span class="algo-tag dp">Dynamic Programming</span>
+                    <span class="algo-tag tc">O(n²)</span>
+                </div>
+                <div class="algo-toggle">▼</div>
+            </div>
+            <div class="algo-body">
+                <div class="algo-body-inner">
+
+                    <div class="concept-box">
+                        <h3>🧠 Core Concept</h3>
+                        <p>Given a rod of length n and prices for each length, find the <strong>maximum revenue</strong> by cutting the rod optimally.</p>
+                        <ul>
+                            <li>Try all possible first cuts (length 1 to i)</li>
+                            <li>For each cut: price[cut] + best value for remaining piece</li>
+                            <li><strong>dp[i]</strong> = maximum price obtainable from rod of length i</li>
+                        </ul>
+                    </div>
+
+                    <div class="key-formula">
+                        <h4>⭐ Most Important Line</h4>
+                        <p>
+                            <code>dp[i] = max(dp[i], price[j-1] + dp[i-j])</code><br>
+                            where j goes from 1 to i (try all first-cut lengths)
+                        </p>
+                    </div>
+
+                    <div class="algo-steps">
+                        <h3>📋 Algorithm Steps</h3>
+                        <ol>
+                            <li>Set dp[0] = 0 (rod of length 0 has no value)</li>
+                            <li>For each length i = 1 to n:</li>
+                            <li>For each cut j = 1 to i: dp[i] = max(dp[i], price[j-1] + dp[i-j])</li>
+                            <li>Answer = dp[n]</li>
+                        </ol>
+                    </div>
+
+                    <div class="code-section">
+                        <div class="code-section-label">
+                            <h3>💻 Complete Code</h3>
+                            <button class="copy-btn" onclick="copyCode(this)">📋 Copy</button>
+                        </div>
+                        <div class="code-block">
+                            <div class="code-block-header">
+                                <div class="code-dot red"></div>
+                                <div class="code-dot yellow"></div>
+                                <div class="code-dot green"></div>
+                                <span class="code-block-filename">rodcutting.c</span>
+                            </div>
+<pre><code><span class="pp">#include</span> <span class="st">&lt;stdio.h&gt;</span>
+
+<span class="cm">/* Returns the maximum of two integers */</span>
+<span class="tp">int</span> <span class="fn">max</span>(<span class="tp">int</span> a, <span class="tp">int</span> b) {
+    <span class="kw">return</span> a &gt; b ? a : b;
+}
+
+<span class="tp">int</span> <span class="fn">main</span>() {
+    <span class="tp">int</span> n;
+
+    <span class="fn">printf</span>(<span class="st">"Enter rod length: "</span>);
+    <span class="fn">scanf</span>(<span class="st">"%d"</span>, &amp;n);
+
+    <span class="tp">int</span> price[n];
+
+    <span class="fn">printf</span>(<span class="st">"Enter prices for lengths 1 to %d:\n"</span>, n);
+
+    <span class="kw">for</span> (<span class="tp">int</span> i = <span class="nm">0</span>; i &lt; n; i++)
+        <span class="fn">scanf</span>(<span class="st">"%d"</span>, &amp;price[i]);
+
+    <span class="cm">/* dp[i] = maximum revenue obtainable from rod of length i */</span>
+    <span class="tp">int</span> dp[n + <span class="nm">1</span>];
+
+    dp[<span class="nm">0</span>] = <span class="nm">0</span>;  <span class="cm">/* Base case: rod of length 0 → no revenue */</span>
+
+    <span class="cm">/* Build up: compute dp[1], dp[2], ... dp[n] */</span>
+    <span class="kw">for</span> (<span class="tp">int</span> i = <span class="nm">1</span>; i &lt;= n; i++) {
+        dp[i] = <span class="nm">0</span>;
+
+        <span class="cm">/* ⭐ Try every possible first-cut length j (from 1 to i)
+           price[j-1] = revenue from the cut piece of length j
+           dp[i-j]    = best revenue from the remaining piece */</span>
+        <span class="kw">for</span> (<span class="tp">int</span> j = <span class="nm">1</span>; j &lt;= i; j++) {
+            dp[i] = <span class="fn">max</span>(dp[i],
+                        price[j - <span class="nm">1</span>] + dp[i - j]);
+        }
+    }
+
+    <span class="fn">printf</span>(<span class="st">"Maximum revenue = %d\n"</span>, dp[n]);
+
+    <span class="kw">return</span> <span class="nm">0</span>;
+}</code></pre>
+                        </div>
+                    </div>
+
+                    <div class="example-output">
+                        <h4>▶ Example Output</h4>
+<pre>Enter rod length: 8
+Enter prices for lengths 1 to 8:
+1 5 8 9 10 17 17 20
+
+Maximum revenue = 22</pre>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+             12. LCS — LONGEST COMMON SUBSEQUENCE
+             ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+        <div class="algo-card" id="lcs" data-category="dp" data-name="Longest Common Subsequence LCS">
+            <div class="algo-header" onclick="toggleCard(this)">
+                <div class="algo-header-left">
+                    <div class="algo-number dp">12</div>
+                    <div class="algo-title">LCS — Longest Common Subsequence</div>
+                </div>
+                <div class="algo-tags">
+                    <span class="algo-tag dp">Dynamic Programming</span>
+                    <span class="algo-tag tc">O(m×n)</span>
+                </div>
+                <div class="algo-toggle">▼</div>
+            </div>
+            <div class="algo-body">
+                <div class="algo-body-inner">
+
+                    <div class="concept-box">
+                        <h3>🧠 Core Concept</h3>
+                        <p>Given two strings, find the <strong>longest sequence</strong> that appears in both without changing the order of characters.</p>
+                        <ul>
+                            <li><strong>dp[i][j]</strong> = LCS length of first i characters of X and first j characters of Y</li>
+                            <li>If characters match: extend the LCS from the diagonal</li>
+                            <li>If they don't: take the max from left or top cell</li>
+                        </ul>
+                    </div>
+
+                    <div class="key-formula">
+                        <h4>⭐ Main Logic — Two Cases</h4>
+                        <p>
+                            If match: <code>dp[i][j] = dp[i-1][j-1] + 1</code><br>
+                            If no match: <code>dp[i][j] = max(dp[i-1][j], dp[i][j-1])</code>
+                        </p>
+                    </div>
+
+                    <div class="algo-steps">
+                        <h3>📋 Algorithm Steps</h3>
+                        <ol>
+                            <li>Create dp[m+1][n+1] table (m = len(X), n = len(Y))</li>
+                            <li>Set dp[0][j] = 0 and dp[i][0] = 0 (base cases)</li>
+                            <li>For each pair (i, j): if X[i-1] == Y[j-1] → diagonal + 1</li>
+                            <li>Else → max of left and top cell</li>
+                            <li>Answer = dp[m][n]</li>
+                        </ol>
+                    </div>
+
+                    <div class="code-section">
+                        <div class="code-section-label">
+                            <h3>💻 Complete Code</h3>
+                            <button class="copy-btn" onclick="copyCode(this)">📋 Copy</button>
+                        </div>
+                        <div class="code-block">
+                            <div class="code-block-header">
+                                <div class="code-dot red"></div>
+                                <div class="code-dot yellow"></div>
+                                <div class="code-dot green"></div>
+                                <span class="code-block-filename">lcs.c</span>
+                            </div>
+<pre><code><span class="pp">#include</span> <span class="st">&lt;stdio.h&gt;</span>
+<span class="pp">#include</span> <span class="st">&lt;string.h&gt;</span>
+
+<span class="cm">/* Returns the maximum of two integers */</span>
+<span class="tp">int</span> <span class="fn">max</span>(<span class="tp">int</span> a, <span class="tp">int</span> b) {
+    <span class="kw">return</span> a &gt; b ? a : b;
+}
+
+<span class="tp">int</span> <span class="fn">main</span>() {
+    <span class="tp">char</span> X[<span class="nm">100</span>], Y[<span class="nm">100</span>];
+
+    <span class="fn">printf</span>(<span class="st">"Enter first string: "</span>);
+    <span class="fn">scanf</span>(<span class="st">"%s"</span>, X);
+
+    <span class="fn">printf</span>(<span class="st">"Enter second string: "</span>);
+    <span class="fn">scanf</span>(<span class="st">"%s"</span>, Y);
+
+    <span class="tp">int</span> m = <span class="fn">strlen</span>(X);    <span class="cm">/* Length of first string */</span>
+    <span class="tp">int</span> n = <span class="fn">strlen</span>(Y);    <span class="cm">/* Length of second string */</span>
+
+    <span class="cm">/* dp[i][j] = LCS length of X[0..i-1] and Y[0..j-1] */</span>
+    <span class="tp">int</span> dp[m + <span class="nm">1</span>][n + <span class="nm">1</span>];
+
+    <span class="cm">/* Fill the DP table */</span>
+    <span class="kw">for</span> (<span class="tp">int</span> i = <span class="nm">0</span>; i &lt;= m; i++) {
+        <span class="kw">for</span> (<span class="tp">int</span> j = <span class="nm">0</span>; j &lt;= n; j++) {
+
+            <span class="cm">/* Base case: empty string → LCS = 0 */</span>
+            <span class="kw">if</span> (i == <span class="nm">0</span> || j == <span class="nm">0</span>)
+                dp[i][j] = <span class="nm">0</span>;
+
+            <span class="cm">/* ⭐ Characters match → extend LCS from diagonal */</span>
+            <span class="kw">else if</span> (X[i - <span class="nm">1</span>] == Y[j - <span class="nm">1</span>])
+                dp[i][j] =
+                    dp[i - <span class="nm">1</span>][j - <span class="nm">1</span>] + <span class="nm">1</span>;
+
+            <span class="cm">/* Characters don't match → take best from left or top */</span>
+            <span class="kw">else</span>
+                dp[i][j] =
+                    <span class="fn">max</span>(dp[i - <span class="nm">1</span>][j],
+                        dp[i][j - <span class="nm">1</span>]);
+        }
+    }
+
+    <span class="fn">printf</span>(<span class="st">"Length of LCS = %d\n"</span>, dp[m][n]);
+
+    <span class="kw">return</span> <span class="nm">0</span>;
+}</code></pre>
+                        </div>
+                    </div>
+
+                    <div class="example-output">
+                        <h4>▶ Example Output</h4>
+<pre>Enter first string: ABCBDAB
+Enter second string: BDCABA
+
+Length of LCS = 4</pre>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+    </div> <!-- end .container -->
+
+    <!-- ============================================================
+         FOOTER
+         ============================================================ -->
+    <footer class="footer">
+        <p>Built with <span class="heart">♥</span> — Algorithm Help Guide &copy; 2026</p>
+    </footer>
+
+    <!-- ============================================================
+         BACK TO TOP BUTTON
+         ============================================================ -->
+    <button class="back-to-top" id="backToTop" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">↑</button>
+
+    <!-- ============================================================
+         JAVASCRIPT
+         ============================================================ -->
+    <script>
+        /* ── Toggle individual algorithm card (expand/collapse) ── */
+        function toggleCard(header) {
+            const body = header.nextElementSibling;
+            const toggle = header.querySelector('.algo-toggle');
+            body.classList.toggle('open');
+            toggle.classList.toggle('open');
+        }
+
+        /* ── Copy code to clipboard ── */
+        function copyCode(btn) {
+            const codeBlock = btn.closest('.code-section').querySelector('pre code');
+            const text = codeBlock.innerText;
+            navigator.clipboard.writeText(text).then(() => {
+                btn.classList.add('copied');
+                btn.innerHTML = '✅ Copied!';
+                setTimeout(() => {
+                    btn.classList.remove('copied');
+                    btn.innerHTML = '📋 Copy';
+                }, 2000);
+            });
+        }
+
+        /* ── Category filter ── */
+        function filterCategory(category, chip) {
+            // Update active chip
+            document.querySelectorAll('.category-chip').forEach(c => c.classList.remove('active'));
+            chip.classList.add('active');
+
+            // Filter cards
+            document.querySelectorAll('.algo-card').forEach(card => {
+                if (category === 'all' || card.dataset.category === category) {
+                    card.style.display = '';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+
+        /* ── Search filter ── */
+        function filterAlgorithms(query) {
+            const q = query.toLowerCase().trim();
+            document.querySelectorAll('.algo-card').forEach(card => {
+                const name = card.dataset.name.toLowerCase();
+                const category = card.dataset.category.toLowerCase();
+                if (name.includes(q) || category.includes(q)) {
+                    card.style.display = '';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+
+            // Reset category chips
+            document.querySelectorAll('.category-chip').forEach(c => c.classList.remove('active'));
+            if (!q) {
+                document.querySelector('.category-chip').classList.add('active');
+            }
+        }
+
+        /* ── Mobile navigation toggle ── */
+        function toggleNav() {
+            document.getElementById('navLinks').classList.toggle('open');
+        }
+
+        /* ── Navbar scroll effect + Back to Top visibility ── */
+        window.addEventListener('scroll', () => {
+            const navbar = document.getElementById('navbar');
+            const backToTop = document.getElementById('backToTop');
+
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+
+            if (window.scrollY > 400) {
+                backToTop.classList.add('visible');
+            } else {
+                backToTop.classList.remove('visible');
+            }
+        });
+
+        /* ── Intersection Observer for card animations ── */
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.animationPlayState = 'running';
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.algo-card').forEach(card => {
+            observer.observe(card);
+        });
+
+        /* ── Active nav link highlighting on scroll ── */
+        window.addEventListener('scroll', () => {
+            const sections = document.querySelectorAll('.algo-card');
+            const navLinks = document.querySelectorAll('.nav-links a');
+
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop - 100;
+                if (window.scrollY >= sectionTop) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === '#' + current) {
+                    link.classList.add('active');
+                }
+            });
+        });
+    </script>
+
+</body>
+</html>
