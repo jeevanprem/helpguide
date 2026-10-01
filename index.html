@@ -332,6 +332,41 @@
             letter-spacing: 1px;
         }
 
+        .download-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 36px;
+            padding: 14px 32px;
+            background: var(--gradient-blue);
+            color: white;
+            font-family: 'Inter', sans-serif;
+            font-size: 1rem;
+            font-weight: 600;
+            border: none;
+            border-radius: 100px;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 20px rgba(99, 102, 241, 0.3);
+            animation: fadeInUp 0.6s ease 0.4s both;
+        }
+
+        .download-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 30px rgba(99, 102, 241, 0.5);
+        }
+
+        .download-btn:active {
+            transform: translateY(-1px);
+        }
+
+        .download-btn svg {
+            width: 20px;
+            height: 20px;
+            fill: currentColor;
+        }
+
         @keyframes fadeInUp {
             from {
                 opacity: 0;
@@ -993,6 +1028,10 @@
                 <div class="hero-stat-label">Language</div>
             </div>
         </div>
+        <a href="code.zip" download class="download-btn" id="downloadBtn">
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 16l-5-5h3V4h4v7h3l-5 5zm-7 2h14v2H5v-2z"/></svg>
+            Download All Code (.zip)
+        </a>
     </section>
 
     <!-- ============================================================
